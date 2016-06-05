@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>t. e. lombardi</title>
+	<link rel="stylesheet" type="text/css" href="tl.css">
+</head>
+<body>
+    <div class="large">
+          <a href="cv.html">CV</a> | <a id="current" href="portfolio.html">Portfolio</a>
+	</div>
+	
+	<button class="accordion">Teaching Materials</button>
+	<div class="panel">
+	    <p>Degrees of Freedom</p>
+		<p>Bioinformatics Online Text</p>
+		<p>Data Mining in R</p>
+	</div>
+
+	<button class="accordion">Research Projects</button>
+	<div class="panel">
+		<p>Center for Energy Policy Management Database</p>
+	</div>
+
+	<div class="large">
+          <a href="index.html">Home</a> | <a href="contact.html">Contact</a>
+	</div>
+	
+	<script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+          acc[i].onclick = function(){
+            this.classList.toggle("active");
+            this.nextElementSibling.classList.toggle("show");
+          }
+        }
+	</script>
+	
+</body>
+</html>
