@@ -6,36 +6,57 @@
 </head>
 <body>
     <div class="large">
-          <a href="cv.html">CV</a> | <a id="current" href="portfolio.html">Portfolio</a>
+          <a href="cv.html" title="Curriculum Vitae" alt="Curriculum Vitae">CV</a> | <a id="current" href="portfolio.html" title="Project Work" alt="Project Work">Portfolio</a>
 	</div>
 	
-	<button class="accordion">Teaching Materials</button>
-	<div class="panel">
-	    <p>Degrees of Freedom</p>
-		<p>Bioinformatics Online Text</p>
-		<p>Data Mining in R</p>
-	</div>
-
-	<button class="accordion">Research Projects</button>
-	<div class="panel">
-		<p>Center for Energy Policy Management Database</p>
-	</div>
+	<div class="accordian">
+	<ul>
+		<li>
+			<div class="image_title">
+				<a href="#">Networking</a>
+			</div>
+			<a href="#">
+				<img src="hierarchy-cloud_640_320.jpg" title="Network Science Projects" alt="Network Science Projects" />
+			</a>
+		</li>
+		<li>
+			<div class="image_title">
+				<a href="#">Database Systems</a>
+			</div>
+			<a href="#">
+				<img src="hof_process_new.jpg" title="Database Systems Projects" alt="Database Systems Projects" />
+			</a>
+		</li>
+		<li>
+			<div class="image_title">
+				<a href="#">Data Analysis</a>
+			</div>
+			<a href="#">
+				<img src="anthony_big.jpg"/>
+			</a>
+		</li>
+		<li>
+			<div class="image_title">
+				<a href="#">Bioinformatics</a>
+			</div>
+			<a href="#">
+				<img src="http://thecodeplayer.com/uploads/media/2rT2vdx.jpg"/>
+			</a>
+		</li>
+		<li>
+			<div class="image_title">
+				<a href="#">Computer Vision</a>
+			</div>
+			<a href="#">
+				<img src="bab.jpg"/>
+			</a>
+		</li>
+	</ul>
+</div>
 
 	<div class="large">
-          <a href="index.html">Home</a> | <a href="contact.html">Contact</a>
+          <a href="index.html" title="Home Page" alt="Home Page">Home</a> | <a href="contact.html" title="Contact Information" alt="Contact Information">Contact</a>
 	</div>
-	
-	<script>
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-          acc[i].onclick = function(){
-            this.classList.toggle("active");
-            this.nextElementSibling.classList.toggle("show");
-          }
-        }
-	</script>
 	
 </body>
 </html>
