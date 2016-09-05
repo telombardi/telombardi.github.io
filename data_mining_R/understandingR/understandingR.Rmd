@@ -1,0 +1,422 @@
+---
+title: 'Chapter 1: Understanding R'
+output: 
+    tufte::tufte_html:
+      highlight: tango
+---
+
+#A Gentle Introduction to R
+
+```{marginfigure}
+Chapter Summary:
+This chapter introduces the R programming language and 
+the foundations required for using it to solve data-oriented problems.
+```
+
+Many students find the R programming language troubling. Beginners find the 
+syntax baffling and arcane. More experienced programmers also express 
+frustration with R because it is different from many commonly-used programming 
+languages. Basically, both groups of students struggle with 
+R because it asks them to think about their work in new ways. This chapter 
+introduces students to the basics of R programming. First, the philosophy 
+behind R is explained to help students orient themselves to its assumptions and nuances.
+Second, the chapter explains the rationale for using R to teach data-oriented
+topics to undergraduates. Finally, the chapter discusses RStudio, an 
+integrated development environment for R, R programming basics, and some
+common errors students encounter when working with R.
+
+##The R Philosophy
+
+The R philosophy includes a few assumptions about programming that 
+may be unfamiliar even to experienced students of technology. The R
+philosophy can be summed up with a few simple phrases.
+
+* Data analysis is the primary purpose of R.
+* Programming is a means to an end in R.
+* Flexibility is more important than consistency in R.
+
+Statisticians and mathematicians developed R to meet their specific 
+disciplinary needs. Initially, the primary audience for the software 
+consisted of highly trained academics and their students with specific
+analytical needs. For this reason, R is intensely focused on tasks related 
+to data analysis. Many other programming languages like Java, for example, 
+focus on the development of applications and programs. If a student's 
+experience is primarily with Java, R will feel strange because it wasn't 
+designed for creating applets, command line programs or interactive 
+graphical applications. R was made for data analysis, and therefore, will 
+lack many of the features familiar to those with experience in languages 
+for application development.
+
+Many programming languages like Java were created by people who really like 
+writing programs and developing applications. Moreover, such programming 
+languages were written to be as general as possible. In theory, a person 
+can write a program in Java to address pretty much any kind of application.
+Languages like Java have been used for games, web sites, business applications,
+and anything else one might imagine. In contrast to Java, R was 
+written to serve people who thought of programming as a means to an end. 
+Statisticians and mathematicians are less interested in programming for its 
+own sake than professional programmers. They focus instead on what programs can 
+do for them such as help them to complete their analytical tasks more 
+quickly and accurately.
+
+Since the R community has been developing its packages for over 20 years, 
+the language has grown a great deal. While many programming languages 
+focus on the consistency of the code, R is more concerned with flexibility. In other words, R developers try to ensure that 
+its users have as much freedom as possible. This is somewhat 
+different from the philosophy of other programming languages. For example, 
+Java frequently retires old versions of its packages requiring older 
+programs to be updated to use its new libraries. Because R sacrifices 
+consistency for flexibility, R can often feel 
+unnecessarily complicated.
+
+For the purposes of this course, students should understand and embrace the 
+R philosophy. This course teaches students about data analysis. The programs
+students will write in this course are a means to that end. Although R can 
+feel complicated at times, once students get the hang of it, they will be 
+able to achieve a great deal with rather compact programs.
+
+##Rationale for using R
+
+If R is such an unusual language, then why do we use it for this course?
+Despite its challenges, R has some important advantages that make its use 
+compelling for this course.
+
+* R is free.
+* R works on almost any desktop computer with Windows, Mac or Linux.
+* R is powerful and awesome once people buy into its philosophy.
+* R has been adopted by many disciplines in the sciences, social sciences, 
+  humanities and arts.
+* R developers have contributed packages addressing an impressive array of 
+  real-world applications.
+  
+Basically, R provides the best balance available for the modern student. 
+It is used 
+widely in academic and professional settings. It is used across the great 
+breadth of disciplines pursued by undergraduate students today. In short, 
+R provides the best platform to address the diverse needs of 
+the undergraduate students who typically enroll in this course.
+
+##Mathematics and Statistics
+
+Given the early history of R, it is no surprise that R has powerful features 
+for handling mathematics and statistics. For example, suppose a student 
+wants to explore the correlation between two variables: temperature in 
+degrees Celsius and ice cream sales in US dollars[^1].
+
+[^1]: Pierce, Rod. (5 Jan 2016). "Correlation". Math Is Fun. 
+Retrieved 10 Apr 2016 from http://www.mathsisfun.com/data/correlation.html
+
+```{r echo=FALSE}
+temp <- 
+  c(14.2, 16.4, 11.9, 15.2, 18.5, 22.1, 19.4, 25.1, 23.4, 18.1, 22.6, 17.2)
+sales <- c(215,325,185,332,406,522,412,614,544,421,445,408)
+
+data <- data.frame()
+data <- data.frame(t(rbind(temp,sales)))
+```
+
+Consider the following sample data:
+
+```{r echo=FALSE}
+knitr::kable(
+  data, caption = 'Ice Cream Sales vs Temperature'
+)
+```
+
+For this example, we want to know if people buy more ice cream when the 
+weather is warmer. Statisticians use a correlation coefficient to measure 
+the relationship between two variables. If the two variables are positively 
+correlated, then the correlation coefficient will be close to 1. If the 
+two variables are negatively correlated, the correlation coefficient will be
+close to -1. Finally, if the variables are uncorrelated, then the 
+correlation coefficient will be close to 0. R makes this kind of calculation
+fairly straight-forward.
+
+```{r}
+cor(data, method="pearson")
+```
+
+The sample code above uses the `cor()` function to calculate the 
+correlation coefficient. In this example, the table of values was 
+stored in a variable called `data`. The `cor()` function calculates 
+the correlation coefficient using a technique called Pearson's product 
+moment correlation coefficient, `method="pearson"`.
+
+The output of this command is printed directly below the command. The 
+correlation coefficient in this case is `r cor(data$temp,data$sales)`.
+In other words, based on this sample data we have some evidence supporting
+the idea that people buy more ice cream when it's hot outside.
+
+##Graphics
+
+Quite frankly, if this is all R did for us, we would not use it for this class.
+Excel has similar functions that work well for this kind of task.
+But R makes it possible for us to explore such relationships graphically.
+For example, it is common to use a scatter plot
+when displaying the relationship between two variables
+
+```{r fig.margin=TRUE, fig.cap="Ice Cream Sales vs. Temperature"}
+plot(data$temp,
+     data$sales,
+     xlab="Temperature in Degrees Celcius",
+     ylab="Sales in U.S. Dollars")
+```
+
+The code above creates a scatter plot with the temperature data plotted 
+on the x axis and sales data plotted on the y axis. The example labels 
+the x and y axes appropriately.
+
+##Data Science Libraries
+
+In addition to R's mathematical and graphical abilities, R also provides 
+many packages for data science algorithms that we will discuss in this 
+class. For example, we will use packages to support the following 
+data mining topics in this course.
+
+* Data Mining Packages
+    + Decision Trees
+    + Neural Networks
+    + Support Vector Machines
+    + Naive Bayes Classification
+* Network Science Packages
+
+It is difficult to find software with the great range of capabilities 
+offered by R.
+
+#R Basics
+
+R is free. RStudio is free. You can obtain them from the following websites.
+
+Main R website: https://www.r-project.org/
+
+Download R: http://cran.mirrors.hoobly.com/
+
+Main RStudio website: https://www.rstudio.com/products/rstudio/
+
+Download RStudio: https://www.rstudio.com/products/rstudio/download3/
+
+##RStudio
+
+RStudio is a popular integrated development specifically for R programming. 
+Although R can be used without R Studio, most R developers use R Studio 
+because it provides many important services to help with the development 
+process. For an introduction to R Studio, watch the short video outlining 
+some of its useful features.
+
+##R Syntax
+
+R commands are called _functions_. Perhaps the most important function in R
+is the `help()` function. The `help()` function provides additional information
+about any other function in R.
+
+Functions have _arguments_ which control the specific aspects of how a 
+function is executed. For example, if we want to read the help file for 
+the `cor()` function, we would call the help function with `cor` as its
+argument.
+
+```
+help(cor)
+```
+Arguments always appear between the parentheses in an R function.
+
+In many cases, we will want to use more than one argument in a function.
+Arguments are separated by commas in R. For example, if we decide to 
+specify that we want to see the help file for the `cor()` function in the 
+`stats` package, we would type:
+
+```
+help(cor, package="stats")
+```
+In some cases, arguments take the form of `argument="option"` or 
+`argument=option`.
+
+The generic form of R functions, therefore, is:
+
+```
+function(argument1, argument2=option, ...)
+```
+
+In addition to functions, R allows users to define _variables_.
+Variables store values in our programs. For example, if we want to 
+store the name "Al" into a variable called `who`, we could type:
+
+```{r}
+who <- "Al"
+```
+
+The `<-` symbol is referred to as the assignment operator. We use this to 
+assign a value to a variable.
+
+We type the name of the variable to see the value it stores.
+
+```{r}
+who
+```
+
+R has many _operators_ for mathematical purposes including arithmetic and 
+boolean operators.
+
+With functions and operators, we will be able to construct complex 
+programs for data analysis.
+
+#Common Tasks in R
+
+##Set Working Directory
+
+Since we will be using R to analyze data stored in files, we will need to be
+able to perform file management tasks easily. This requires the user to 
+understand the concept of a _working directory_. The working directory in R 
+is the location in the computer's file system where R is currently looking 
+for files. If we want to see the current working director in R, we use 
+the `getwd()` function:
+
+```{r}
+getwd()
+```
+
+Now that we know where R is looking for our files, we might want to know 
+what it sees. To print the file names in the current working directory, 
+we can use the `dir()` function:
+
+```
+dir()
+```
+In many cases, we will need to change the working directory in R. We use 
+the `setwd()` function for this purpose. We can change the working directory 
+to the `C:\temp` folder with the following function:
+
+```{r}
+setwd("C:/temp")
+```
+
+You should become very comfortable with these functions because we will 
+frequently need to change directories to load data into R.
+
+##Loading Data
+
+Since R is designed for data analysis, it is no surprise that it has many 
+functions for loading data. First, R already comes with many built in 
+data sets. To explore the data sets already available in R, use the 
+`data()` function.
+
+If you want to load a specific data set such as the `cars` data set, call the
+`data()` function with `cars` as its only argument.
+
+```{r}
+data(cars)
+```
+
+This command loads the `cars` data set and stores it in a variable named
+`cars`.
+To see the data stored in the varialbe, just type `cars`.
+
+```{r}
+cars
+```
+
+Although this is extremely convenient, analysts often need to load data from 
+files or the internet. R provides many ways to do this. For the sake of 
+clarity, we will discuss one particular file type, the comma separated 
+value file or CSV for short. The `read.csv()` function loads data in 
+CSV format into R. For example, if we want to load data from the following 
+location over the internet, http://introcs.cs.princeton.edu/java/data/elements.csv,
+we would type:
+
+```{r}
+data <- read.csv("http://introcs.cs.princeton.edu/java/data/elements.csv")
+```
+
+This function downloads the CSV from internet and stores its contents into 
+a variable called `data`.
+
+If we downloaded the same file to the `C:\temp` folder, we would load it 
+with a slightly different command:
+
+```
+data <- read.csv("C:/temp/elements.csv")
+```
+
+Practice loading data into R. We will be performing this task often.
+
+##Installing and Loading Packages
+
+In many cases, developers need to load R _packages_, software modules that 
+extend R's capabilities. First, packages must be installed into the R system.
+After installation, packages must be loaded into memory to make them 
+available to R programs.
+
+To install the `stringr` package, for example, we type:
+
+```
+install.packages("stringr")
+```
+
+To make `stringr` functions available in R, type:
+
+```
+library(stringr)
+```
+
+The stringr functions and documentation are now available in R. To test this,
+look at the help documents for the function.
+
+```
+help(package="stringr")
+```
+
+Since many data mining tasks require additional libraries, you should practice
+installing and loading libraries to master this skill.
+
+#Common Errors in R
+
+Many students express frustation due to errors in R. In this section, we 
+highlight a few common errors to help smooth out the rough patches.
+
+##Error: could not find function "gtest"
+
+```
+gtest()
+```
+
+This error can mean a few different kinds of things. Literally, R does not 
+know of any function called `gtest()`. There are a few different reasons 
+why this might be:
+
+1. There is in fact no such function because you mistyped something.
+Review the documentation and double-check your typing.
+
+2. This is such a function, but its packages has not been installed and loaded.
+In this case, install and load the package and try again.
+
+##Error in file(file, "rt") : cannot open the connection
+
+Students often receive this error when first working with data files.
+
+```
+data <- read.csv("bacon.csv")
+```
+
+The key is to read the entire message. R tells you that there is no such 
+file or directory. In this case, R cannot find the file `bacon.csv`. 
+There are several reasons why this may be so.
+
+1. The file in fact does not exist.
+Confirm that you correctly typed the file name. Confirm that the file is in
+fact where you think it is.
+
+2. The file exists, but is not in R's current working directory.
+Move the file to R's working directory or change R's working 
+directory to the location where the file can be found.
+
+#Summary
+
+In this chapter, we outlined the basics of working with R including its 
+philosophy, basic syntax and common tasks. In the next chapter, we will 
+introduce the data mining concepts that form the primary focus of this 
+course.
+
+#References
+
+R Core Team (2016). R: A language and environment for statistical
+  computing. R Foundation for Statistical Computing, Vienna, Austria. URL
+  https://www.R-project.org/.
