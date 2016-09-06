@@ -40,6 +40,7 @@ The CRISP-DM method includes the following phases:
 
 ##Data Understanding
   This phase can include:
+  
   * data collection;
   * preliminary data analysis; 
   * data quality review.
@@ -48,6 +49,7 @@ The CRISP-DM method includes the following phases:
   Data preparation takes the data in its initial form and 
   transforms it into its final form for analysis. This may include 
   many steps such as:
+  
   * Outlier analysis
   * Handling missing values
   * Separating data into training and testing sets
