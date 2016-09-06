@@ -182,7 +182,7 @@ plot(density(bat[,2]))
 abline(v = .3278, col="red")
 ```
 
-_Evalutation_
+_Evaluation_
 
 Do our results shed light on our original problem?
 Rod Carew's batting average does look elite even in this sample.
