@@ -1,0 +1,531 @@
+---
+title: 'Chapter 3: Understanding Data'
+output: 
+    tufte::tufte_html:
+      highlight: tango
+---
+
+#Understanding Data
+
+```{marginfigure}
+Chapter Summary:
+This chapter introduces some basic concepts related to data.
+In particular, the chapter reviews data types, scales, 
+descriptive statistics and data cleansing operations.
+```
+
+In order for us to mine data effectively, we will have to develop a 
+clear understanding of the ideas motivating data-oriented approaches
+to problem solving. We will need to understand:
+
+* The theories behind metadata, data types and measurement scale;
+
+* The practical aspects of handling data including collecting descriptive 
+  statistics and data cleansing operations.
+  
+#Metadata, Data Types and Measurement Scales
+
+##Metadata
+Metadata is a description of the data in a data set.
+The `head()` function lets us review the first 6 rows of data 
+in a data frame.
+
+```{r}
+algae_data <- read.csv("algae.csv")
+head(algae_data)
+```
+
+If we want to look at the metadata, however, we can use functions like `str()`.
+
+```{r}
+str(algae_data)
+```
+
+The output from the `str()` function gives the description of each 
+column in the data frame including:
+
+* column name, example: "season"
+* data type, example: "Factor w/ 4 levels"
+* sample data, example: "4 2 1"
+
+The `attributes()` function provide a different kind of summary of a data 
+frame that includes:
+
+* column names
+* class (data type)
+* row names
+
+```{r}
+attributes(algae_data)
+```
+
+We can also retrieve the column names from a data frame with the 
+`names()` function.
+
+```{r}
+names(algae_data)
+```
+
+Finally, we sometimes need to know the quantity of data in our data set.
+
+`dim()` gives us the dimensions of our data frame.
+
+`nrow()` gives us the number of rows.
+
+`ncol()` gives us the number of columns.
+
+```{r}
+dim(algae_data)
+nrow(algae_data)
+ncol(algae_data)
+```
+
+##Data Types
+One of the most important pieces of metadata is the data type.
+The data type of a variable or a data frame column tells R what 
+operations make sense on that data. For example, it probably 
+doesn't make much sense to try to multiply two names or dates.
+Data types provide structure to our data that helps analysts 
+avoid doing crazy things.
+
+R has many data types, but we will focus on the following:
+
+`character` data types are appropriate for labels like ID fields.
+
+`logical` types allow for two values: TRUE or FALSE.
+
+`numeric` types are essentially decimals: 3.14
+
+`integer` types represent numbers without decimal points.
+
+`factor`  types represent qualitative data in nominal or ordinal scales.
+
+We need to know about data types because we will often need to 
+convert our data from one type to another.
+
+##Measurement Scales
+
+Measurement scales help us to put our data into perspective by 
+giving us a framework for understanding what we should and 
+should not do with different kinds of measurements.
+
+We track 4 different properties of measurement scales [^1]
+
+[^1]: http://stattrek.com/statistics/measurement-scales.aspx?Tutorial=AP
+
+* Identity: each value in the scale has a unique meaning.
+
+* Magnitude: the values in the scale can be ordered.
+
+* Equal Intervals: the intervals between units are consistently scaled.
+
+* A Minimum Value of Zero: The scale has a true zero point.
+
+We can classify the measurement scale of our variables based on which 
+properties they satisfy:
+
+_nominal scale of meaurement_
+
+In our current example, season is an example of variable at the nominal scale.
+Winter, Spring, Summer and Autumn function largely as labels.
+Although they are ordered in time, we wouldn't say that they have 
+magnitude exactly. In other words, winter isn't more or less than 
+spring in any meaningful way. The only property nominal variables
+satisfy is identity.
+
+In practical terms, it only makes sense to count nominal values.
+For example, the only measure of central tendency that applies 
+to variables at this scale is the mode. In R, variables at the 
+nominal scale are generally stored with the factor data type.
+
+_ordinal scale of measurement_
+
+In our example, size and speed are examples of variables at the 
+ordinal scale. Large rivers are larger than medium rivers and 
+medium rivers are larger than small rivers. Measurements at 
+this scale satisfy the identity and magnitude properties.
+
+In practical terms, we can reliably use the mode and median for 
+measures of central tendency at this scale. In R, variables 
+at the ordinal scale are generally stored as ordered factors.
+
+_interval scale of measurement_
+
+A good example of a measurement at interval scale is temperature 
+measured in degrees Celsius or Fahrenheit. These measurements 
+satisfy the identity, magnitude and equal interval properties.
+The difference between 1 and 2 degrees Celsius is the same 
+as the difference between 101 and 102 degrees Celsius.
+
+In practical terms, we can reliably use the mode, median or 
+arithmetic mean for measures of central tendency at this scale.
+In R, interval scale variables can be stored as integers or numeric types.
+
+_ratio scale of measurement_
+
+Weight is a good example of a ratio scale measurement. In addition 
+to the properties of identity, magnitude, and equal interval, weight 
+also has a meaningul minimum value of zero. Where the zeros in 
+Fahrenheit and Celsius are arbitrary, a weight of zero is a true 
+minimum that has meaning in the scale.
+
+In practical terms, we can reliably use any measure of central 
+tendency at this scale. In R, ratio scale variables are usually 
+stored as numeric types.
+
+Data types and measurement scales help us use our data responsibly.
+They help us understand what to do and not to do with different 
+types of variables in our data frames.
+
+#Descriptive Modeling
+
+Successful data mining requires an in-depth understanding of the 
+variables in a data set. Most projects, therefore, regardless of their 
+ultimate goal requires descriptive modeling to support analysis and 
+data cleansing. The rest of this chapter demonstrates the basics 
+of descriptive modeling.
+
+##How do we describe variables in our data set?
+
+For data at the interval or ratio scale, we describe variables with four 
+qualities: size, location, spread and shape.
+
+The fastest way to gauge these qualities for a data frame is to use the 
+`summary()` function.
+
+```{r}
+summary(algae_data)
+```
+
+If we compare the summary statistics for the different columns in our data, 
+we see that nominal and ordinal variables report the mode, while interval 
+and ratio scale variables report a battery of descriptive statistics 
+including the min, first quartile, median, mean, third quartile and max.
+
+We can also use our eyes by plotting either the histogram or the 
+density function of our interval/ratio data.
+Let's try this for maximum PH.
+
+```{r fig.margin=TRUE, fig.cap="Histogram of maximum pH"}
+hist(algae_data$mxPH, xlab="Maximum pH", main="Histogram of Maximum pH")
+```
+
+Here is the histogram and density plot for a7:
+
+```{r fig.margin=TRUE, fig.cap="Shape of Algae (a7)"}
+par(mfrow=c(1,2))
+plot(density(algae_data$a7), xlab="Concentration of Algae (a7)",
+   main="Plot of Concentration of Algae (a7)")
+hist(algae_data$a7, xlab="Algae (a7)", main="Histogram of Concentration of Algae (a7)")
+par(mfrow=c(1,1))
+```
+
+When we compare these two histograms, we learn a lot about the 
+size, location, spread and shape of the distributions of these variables.
+
+```{r fig.margin=TRUE, fig.cap="Histograms of Maximum pH and Algae (a7)"}
+par(mfrow=c(1,2))
+hist(algae_data$mxPH, xlab="Maximum pH", main="Histogram of Maximum pH")
+hist(algae_data$a7, xlab="Algae (a7)", main="Histogram of Concentration of Algae (a7)")
+par(mfrow=c(1,1))
+```
+
+##Size: How many observations do we have?
+
+Characterizing the size of a variable is easy.
+We can use `length()` to determine the size of a specific variable.
+
+```{r}
+length(algae_data$mxPH)
+```
+
+We can use `nrow()` or `dim()` to determine the number of observations in a data frame.
+
+```{r}
+nrow(algae_data)
+dim(algae_data)
+```
+
+We need to know the size of our data sets so that we can put our results 
+into perspective. In the world of data mining generally, more observations 
+is better because it increases our statistical power.
+
+##Location: what does the typical value look like?
+
+It is often useful to know what the typical value looks like. We often 
+report measures of central tendency for this purpose: mode, median, mean.
+When we need a numerical summary of the typical value, we can use any 
+of the standard measurements (where appropriate).
+
+Let's take measures of central tendency for algae a7.
+
+```{r}
+mean(algae_data$a7)
+median(algae_data$a7)
+table(algae_data$a7)
+```
+
+##Spread: what do the atypical values look like?
+
+We often need to know the spread of the data to get a sense of 
+the atypical values in our data set. We report measures like 
+the range, variance, standard deviation, and interquartile range.
+R provides functions for each of these measurements.
+
+```{r}
+range(algae_data$a7)
+var(algae_data$a7)
+sd(algae_data$a7)
+IQR(algae_data$a7)
+```
+
+##Shape: does the shape of the distribution tell us something?
+
+R can produce metrics that capture the shape of a distribution:
+kurtosis and skewness. For the purposes of this class, however, 
+we can address the shape by examining the histogram or 
+density plot of a variable. 
+
+You should learn to recognize the following shapes in a variable:
+
+_normal distribution_: the bell curve
+
+The normal distribution has important mathematical properties that make 
+data mining easier. We want to know if our data conforms roughly to this 
+distribution.
+
+Informally, normal distributions are symmetric in shape. They have 
+medians and means that are very close together and roughly 2/3 of the 
+data points should fall with 1 standard deviation of the mean.
+
+Many variables in biology conform closely to the properties of a normal 
+distributon.
+
+_bimodal distribution_
+
+Sometimes, we'll see distributions with two bumps. This can indicate that 
+we have two different underlying populations in our data.
+
+_power law distribution_: long-tail distribution
+
+In some cases, we see see variables that have really long tails in 
+one direction. We want to note these variables because, depending on the 
+severity of the skew, we may decide to adjust our strategy for handling 
+these variables.
+
+#Data Cleansing
+
+We need to perform data cleansing to ensure that our variables can be used
+as we wish. For example, let's try to take the arithmetic mean of 
+maximum PH:
+
+```{r}
+mean(algae_data$mxPH)
+```
+
+Why are we getting NA instead of a number?
+
+Let's review the summary information.
+
+```{r}
+summary(algae_data$mxPH)
+```
+
+We have a _missing value_ for that variable in one of our observations.
+Let's find it.
+
+```{r}
+algae_data[is.na(algae_data$mxPH),]
+```
+
+For now, let's just remove this row to make our lives easier.
+
+```{r}
+ad <- algae_data[!is.na(algae_data$mxPH),]
+```
+
+Now let's try our arithmetic mean:
+
+```{r}
+mean(ad$mxPH)
+```
+
+We've just seen an example of how to remove missing values.
+
+We will need to do many things like this when we cleanse our data.
+Here is a preview of the kinds of things you should be comfortable doing 
+as we progress through the class.
+
+##Identifying and Handling Missing Values
+
+As we have seen, we can find columns with missing values (NAs) using 
+the `summary()` function.
+
+The `complete.cases()` function lets us do something similar for rows.
+The following function will give us a list of incomplete cases marked with 
+the logical value TRUE.
+
+```{r}
+!complete.cases(algae_data)
+```
+
+We can insepct these cases with the following code:
+
+```{r}
+algae_data[!complete.cases(algae_data),]
+```
+
+This syntax probably looks strange, so lets dig into it.
+We can access any row or column in a data frame from referring to its 
+row or column number.
+
+For example, if we want to see the data in the first row and column of 
+algae_data, we can type:
+
+```{r}
+algae_data[1,1]
+```
+
+If we want to see everything in the first row, we type:
+
+```{r}
+algae_data[1,]
+```
+
+If we want to see everything in the first column, we type:
+
+```{r}
+algae_data[,1]
+```
+
+So the code below asks R to return the rows with cases that are NOT 
+complete. In other words, this code will return any rows with 1 or more 
+NAs.
+
+```{r}
+algae_data[!complete.cases(algae_data),]
+```
+
+If we decide to completely remove these observations, we could 
+write code like this:
+
+```{r}
+ad <- algae_data[complete.cases(algae_data),]
+```
+
+`is.na()` can be used in a similar way within the scope of a 
+single variable.
+
+##Identifying and Removing Outliers
+
+An easy visual way to identify outliers in your data is the box and 
+whisker plot.[^2]
+
+[^2]: http://flowingdata.com/2008/02/15/how-to-read-and-use-a-box-and-whisker-plot/
+
+```{r fig.margin=TRUE, fig.cap="Boxplot of Algae a7"}
+boxplot(algae_data$a7)
+```
+
+The thick black line in the center of the box represents the median.
+50% of the observations are higher (or lower) than this value.
+
+The top of the box represents the upper quartile meaning that 25% 
+of the observations are higher than this value.
+
+The bottom of the box represents the lower quartile meaning that 
+25% of the observations are lower than this value.
+
+The top whisker represents the max, excluding outliers.
+The dots above top whisker are outliers beyond Tukey's upper inner fence.
+
+The bottom whisker represents the min, excluding outliers.
+The dots below the bottom whisker are outliers beyond Tukey's 
+lower inner fence.
+
+_Tukey Fences_
+
+Let's express the median, upper and lower quartiles with numbers.
+
+```{r}
+uq <- quantile(algae_data$a7,3/4)
+m <- median(algae_data$a7)
+lq <- quantile(algae_data$a7,1/4)
+```
+
+Now we can construct our Tukey fences.
+
+```{r}
+iqr <- IQR(algae_data$a7)
+uof <- uq + (iqr * 3)
+uif <- uq + (iqr * 1.5)
+lif <- lif <- max(0,(lq - (iqr * 1.5)))
+lof <- max(0,(lq - (iqr * 3)))
+```
+
+We can now filter by any of the fences. Let's find all points outside 
+of the upper inner Tukey fence. This should be the same set of 
+points marked above the whisker.
+
+```{r}
+algae_data[algae_data$a7>uif,]
+uif
+```
+
+_mean and standard deviation_
+
+The mean and standard deviation used together can be a powerful way 
+to detect outliers especially when we have a symmetric distribution 
+like a normal curve.
+
+The standard deviation is expressed in the same terms as the mean.
+This makes it an effective and meaningful basis for finding outliers.
+
+Let's pull out the missing values from maximum PH and look for outliers.
+
+```{r}
+ad <- algae_data[!is.na(algae_data$mxPH),]
+```
+
+Now let's look for outliers. 
+
+```{r}
+plot(density(ad$mxPH))
+```
+
+We need to calculate the mean and standard deviation.
+
+```{r}
+am <- mean(ad$mxPH)
+asd <- sd(ad$mxPH)
+am
+median(ad$mxPH)
+asd
+```
+
+Let's filter for records 2 standard deviations below the mean.
+
+```{r}
+lb <- am - (asd * 2)
+lb
+```
+
+Then we can print out the outliers.
+
+```{r}
+ad[ad$mxPH<lb,]
+```
+
+#Summary
+
+In this chapter, we reviewed some important concepts in data analysis like 
+the difference between data and metadata, data types, and 
+measurement scales. We also discussed some practical things that we 
+can do with descriptive statistics like find and remove outliers from 
+data.
+
+#Session Information
+
+```{r}
+sessionInfo()
+```
