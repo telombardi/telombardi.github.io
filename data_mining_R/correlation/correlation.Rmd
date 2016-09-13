@@ -1,0 +1,234 @@
+---
+title: 'Chapter 4: Correlation'
+output: 
+    tufte::tufte_html:
+      highlight: tango
+---
+
+#Correlation
+
+```{marginfigure}
+Chapter Summary:
+Correlation helps us to identify linear relationships between two variables in interval or ratio scale.
+```
+
+Correlation helps us to identify linear relationships between two variables in interval or ratio scale. Correlation coefficients range from -1 to 1.
+
+__-1__ represents a negative linear relationship between the two variables. In this case, when one variable increases, the other variable decreases. The variables reliably move in opposite directions. For example, the temperature and heating bills are negatively correlated.
+
+__0__ represents no linear relationship between two variables.
+
+__1__ represents a positive linear relationship between two variables. In such cases, when one variable increases, the other also increases. The variables move reliably in the same direction. For example, the temperature and ice cream consumption are positively correlated.   
+
+##Assumptions
+
+In order to use correlation effectively, we need to understand the assumptions underlying the technique. Correlation assumes (Motulsky, 2014) that:
+
+* Both variables are normally distributed.
+
+* The relationship between the variables is linear.
+
+* The data were randomly sampled.
+
+* The data samples are paired.
+
+* The data samples one population.
+
+* The data represent independent observations.
+
+* The data has no outliers.
+
+We will see many of these assumptions again. Pearson's correlation coefficient is a 
+_parametric technique_, meaning that the technique makes assumptions about the underlying population such as a normal distribution.
+
+We will also learn about Spearman's Rank-Order correlation which is a _non-parametric technique_ that makes fewer assumptions about the population from which the samples are drawn.
+
+##Limitations of Interpretation
+
+* Correlation is NOT causation. Variables can be correlated for many complex reasons that have nothing to do with causality.
+
+#Example
+
+This example comes from <http://www.mathsisfun.com/data/correlation.html>.
+We want to see ice cream sales and temperature are positively correlated.
+
+```{r}
+data <- read.csv("correlation_in_class.csv")
+str(data)
+```
+
+_Temp_ measures average daily degrees Celsius. 
+_Sales_ measures the daily sales in USD in an ice cream shop.
+
+Let's check out these variables to see what we are dealing with.
+
+##Check for outliers
+
+```{r fig.margin=TRUE, fig.cap="Boxplot of Temp"}
+boxplot(data$Temp)
+```
+
+```{r fig.margin=TRUE, fig.cap="Boxplot of Sales"}
+boxplot(data$Sales)
+```
+
+That looks pretty good. The range is within the inner Tukey fences.
+
+##Normal distributions
+
+Do we have approximately normal distributions?
+Does it make sense for us to use a parametric approach?
+
+```{r fig.margin=TRUE, fig.cap="Variable Distributions"}
+plot(density(data$Temp))
+plot(density(data$Sales))
+```
+
+We've seen worse. Let's proceed.
+
+#Pearson's Product-Moment Correlation (Pearson)
+
+Don't let this fancy formula trick you into thinking this is complicated. It's not that bad.
+
+$$
+\begin{aligned}
+ r = \dfrac{\sum_{i=1}^{n}(x_{i}-\overline{x})(y_{i}-\overline{y})}
+ {\sqrt{\sum_{i=1}^{n}(x_{i}-\overline{x})^2 \sum_{i=1}^{n}(y_{i}-\overline{y})^2}}
+\end{aligned}
+$$
+
+##Calculating correlation coefficient with R
+
+```{r}
+cor(data$Temp,data$Sales, method="pearson")
+```
+
+We have a positive correlation in our data. Let's graph it with a scatter plot.
+
+```{r}
+plot(data$Temp,data$Sales)
+abline(lm(data$Sales ~ data$Temp))
+```
+
+We always want to graph our data to confirm our assumptions.
+Do the lines distribute randomly around the fitted line?
+
+##Coefficient of Determination (r squared)
+
+It may be tempting to think of a correlation as a percentage. Please don't do that. If you're looking for the percentage of variance explained, you want the coefficient of determination (r squared).
+
+```{r}
+cor(data$Temp,data$Sales, method="pearson")^2
+```
+
+##P-value
+
+The p-value helps us assess the statistical significance of our result.
+
+```{r}
+cor.test(data$Temp,data$Sales, method="pearson")
+```
+
+Most phenomena in the world are not correlated at all. My weight probably has no correlation to the number of times I think about unicorns every day. When we evaluate hypotheses, we have to compare them to something that we consider typical. In every day life, most things just aren't correlated. This is our null hypothesis or null model when working with correlation.
+
+We start our analysis by assuming that the two variables in question are not correlated. In other words, the 'default' relationship between variables is no correlation.
+
+H0: r = 0
+
+Our data, however, give us r = .95 or a really strong positive correlation.
+So our alternative hypothesis is:
+
+H1: r = .95
+
+The p-value tells us how likely it is that we would see a correlation coefficient statistic like this (.95) when the population parameter (the real correlation) is in fact 0.
+
+The probability (p-value) is .000001016
+
+If I had to bet, I would reject the idea that the real correlation is 0. So would most scientists who generally reject the null hypothesis when p-value < 0.05
+
+We have a miniscule chance of observing this correlation (.95)
+if the real correlation is 0.
+
+##Dissecting the output
+
+```{r}
+cor.test(data$Temp,data$Sales, method="pearson")
+```
+
+data: restates the variables in the test. In this case, Temp and Sales.
+
+t: The p-value is calculated in this case with the t distribution. The t statistic represents a location on that curve. If we were to look up the p-value manually, we would need this value.
+
+df: Degrees of freedom. In this case, we have 12 observations and two variables. 12-2=10.
+
+p-value: The probability of observing the reported correlation coefficient if the true population coefficient is 0. 
+
+alternative hypothesis: As stated.
+
+95 percent confidence interval: There is a 95% chance that this confidence interval contains the true population correlation coefficient.
+
+sample estimates: the correlation coefficient of this sample
+
+#Spearman's Rank-Order Correlation Coefficient
+
+##Assumptions
+
+* The variables in question have a linear relationship.
+
+* The variables are ordinal, interval or ratio scale.
+
+##Example
+
+```{r}
+cor.test(data$Temp,data$Sales, method="spearman")
+```
+
+Basically, Spearman's technique takes the rank of the variables and performs calculations similar to those used in Pearson's technique. In R, we can obtain the rank of our data with the following command:
+
+```{r}
+rank(data$Temp)
+rank(data$Sales)
+cor.test(rank(data$Temp),rank(data$Sales), method="pearson")
+```
+
+Taking Pearson's r of ranked data produces the same correlation coefficient with a different p-value calculation.
+
+Spearman's r may be a reasonable option if we feel that our data doesn't quite meet the parametric assumptions of Pearson's test.
+
+#Visualizing Many Correlations at the Same Time
+
+Sometimes we want to look for correlations in many variables at the same
+time. For example, let's look at the algae data.
+
+```{r}
+algae_data <- read.csv("algae.csv")
+cleansed_data <- algae_data[complete.cases(algae_data),]
+cleansed_data <- cleansed_data[,4:18]
+cor(cleansed_data)
+```
+
+Unfortunately, it isn't terribly easy to read this format. We can use 
+visualization to help us here.
+
+We can use the `corrplot` package to help us with this.
+
+```
+install.packages(corrplot)
+```
+
+```{r}
+library(corrplot)
+corrplot(cor(cleansed_data))
+```
+
+#References
+
+Motulsky, H. (2014). Intuitive Biostatistics. Oxford University Press.
+
+Laerd Statistics. (2013). Spearman's Rank-Order Correlation. <https://statistics.laerd.com/statistical-guides/spearmans-rank-order-correlation-statistical-guide.php> Accessed 9/14/2015.
+
+#Session Information
+
+```{r}
+sessionInfo()
+```
