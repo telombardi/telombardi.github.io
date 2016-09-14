@@ -1,0 +1,322 @@
+---
+title: "NFL Quarterbacks Analysis"
+author: "Tom Lombardi"
+date: "September 1, 2015"
+output: html_document
+---
+
+#Introduction
+A casual observer of U.S. Football might conclude that a quarterback's performance has little to do with mental acuity or cognitive ability. On the other hand, experienced, knowledgeable observers often cite the importance of a QB's quick thinking and decision-making abilities.  
+How much if at all does a quarterback's cognitive ability contribute to his NFL success?
+
+#Understanding the Problem
+Every year NFL teams try to draft QBs who can perform consistently at a high-level in an incredibly competitive field of players. During the draft, teams attempt to select players based on a number of factors. For quarterbacks, one of these factors is a test of cognitive abilities, the Wonderlic Cognitive Ability Test. Therefore, scouts for NFL teams must think seriously about the role of mental abilities in a QB's performance. Moreover, they must decide if these cognitive abilities are more important than other desirable qualities such as strength, speed and agility. The NFL Combine is a yearly series of tests performed by NFL hopefuls to provide some metrics to teams selecting new players. In order to answer our question, we will attempt to correlate QB performance in the Combine to their performance in the 2014 season.
+
+#Understanding the Data
+The NFL Combine data is available on NFLSavant.
+<http://www.nflsavant.com/about.php>
+The Combine data includes the following data:
+
+- 1 - year - the year the combine test was taken: 1999-2015
+- 2 - name
+- 3 - firstname
+- 4 - lastname
+- 5 - position
+- 6 - heightfeet
+- 7 - heightinches
+- 8 - heightinchestotal
+- 9 - weight - measure in pounds
+- 10 - arms
+- 11 - hands
+- 12 - fortyyd - forty-yard dash (seconds)
+- 13 - twentyyd - twenty-yard dash (seconds)
+- 14 - tenyd - ten-yard dash (seconds)
+- 15 - twentyss - twenty-yard shuttle sprints (seconds)
+- 16 - threecone - the three cone drill tests an athlete's ability to change direction at high speed (seconds)
+- 17 - vertical - Vertical jump tests lower-body strength (inches)
+- 18 - broad - Broad jump (inches)
+- 19 - bench - How many times can an athlete bench press 225 pounds?
+- 20 - round - Round selected in the draft.
+- 21 - college - In what college did the athlete play?
+- 22 - pick - When was the athlete picked in the draft?
+- 23 - pickround - In what round was the athlete selected?
+- 24 - picktotal - What was the overall pick number in the draft?
+- 25 - wonderlic - Score on Wonderlic Cognitive Ability Test.
+- 26 - nflgrade 
+
+The 2014 Player Statistics are available from pro-footbal-reference.com.
+<http://www.pro-football-reference.com/years/2014/passing.htm>
+The attributes are well-documented at the source. For our purposes, we will use the following fields:
+
+* Rate - NFL Quarterback rating
+* QBR - ESPN's Quarterback rating
+
+We want to see how well a player's Wonderlic score correlates with their ratings in the 2014 season. 
+
+#Data Preparation
+##Load Data
+Load the combine data
+```{r}
+combine <- read.csv("combine.csv")
+```
+
+Load the 2014 player statistics
+```{r}
+passing <- read.csv("2014passing.csv")
+```
+
+##Data Cleasing
+###Cleansing the passing data
+The passing data are very messy.
+Let's keep only the columns we need.
+```{r}
+passing <- passing[,c(1,2,4,5,22,23)]
+```
+
+Now we need to clean up the rows
+Remove additional metadata garbage in the data
+```{r}
+passing <- passing[passing$Rk!="Rk",]
+```
+
+Remove people who are not position QB or qb
+```{r}
+passing <- passing[passing$Pos=="QB" | passing$Pos=="qb",]
+```
+
+Now, let's review the state of our variables.
+```{r}
+summary(passing)
+```
+
+Most of these fields should be numeric, but our data problems forced them to be interpreted as factors. We should be seeing many number summaries. Let's confirm this.
+```{r}
+class(passing$Age)
+typeof(passing$Age)
+```
+
+OK. Let's unfactor these variables.
+Let's convert the following back to numerics.
+```{r}
+passing$Age <- as.numeric(levels(passing$Age))[passing$Age]
+passing$Rate <- as.numeric(levels(passing$Rate))[passing$Rate]
+passing$QBR <- as.numeric(levels(passing$QBR))[passing$QBR]
+```
+
+We want the name field to be a character.
+```{r}
+passing$X <- as.character.factor(passing$X)
+```
+
+In order to be able to match on the name fields, we'll need to 
+remove the additional symbols (* and +)
+```{r}
+passing$X <- gsub("[*]", "", passing$X)
+passing$X <- gsub("[+]", "", passing$X)
+```
+
+Remove some more columns that we don't need.
+```{r}
+passing$Rk <- NULL
+passing$Pos <- NULL
+```
+
+###Cleansing the combine data
+Pick out only the fields we need.
+```{r}
+combine <- combine[,c(1,2,5,8,9,12,13,14,15,16,17,18,23,24,25)]
+```
+
+Let's reduce the number of rows by position (QB only)
+```{r}
+combine <- combine[combine$position=="QB",]
+```
+
+###Merging the datasets
+Let's join the data matching `combine$name` to `passing$X`
+We need the following library. Remember to install gdata if you have not already done so.
+```{r}
+library("gdata")
+```
+
+Merge the data where names match.
+```{r}
+qbdata <- merge(passing,combine,by.x="X",by.y="name",all.x=FALSE,all.y=FALSE)
+```
+
+We need to do some additional cleanup.
+Remove unneeded fields. Why are we removing these fields?
+
+- year is not useful for our analysis.
+- twentyyd has no variance; tenyd has little.
+- We needed position for matching, but can't use it for correlations.
+
+```{r}
+qbdata$year <- NULL
+qbdata$twentyyd <- NULL 
+qbdata$tenyd <-NULL
+qbdata$position <- NULL
+```
+
+We need to unfactor pickround
+```{r}
+qbdata$pickround <- as.numeric(levels(qbdata$pickround))[qbdata$pickround]
+```
+
+We have to handle missing values.
+We have an NA value in the QBR field. For now, let's substitute the arithmetic mean of the QBR field for the NA. We'll reflect on this choice later.
+
+```{r}
+qbdata[qbdata$X=="Robert Griffin","QBR"] <- mean(qbdata$QBR, na.rm = TRUE) 
+```
+
+Let's take one last look at our data.
+
+```{r}
+summary(qbdata)
+```
+
+#Model Construction
+We want to see if there is a correlation between the Wonderlic and QB ratings.
+Let's use Pearson's Product Moment Correlation Coefficient:
+
+$$
+\begin{aligned}
+ r = \dfrac{\sum_{i=1}^{n}(x_{i}-\overline{x})(y_{i}-\overline{y})}
+ {\sqrt{\sum_{i=1}^{n}(x_{i}-\overline{x})^2 \sum_{i=1}^{n}(y_{i}-\overline{y})^2}}
+\end{aligned}
+$$
+
+We can use the following command in R for this calculation.
+
+```{r}
+pear <- cor(qbdata[,c(3,4,7,8,9,10,11,14)], method="pearson")
+pear
+```
+
+In this sample, we have a fairly strong correlation between the Wonderlic test and quarterback performance ratings. Let's perform some additional analysis to see if it's statistically significant.
+
+```{r}
+plot(qbdata$wonderlic,qbdata$Rate)
+abline(lm(qbdata$Rate ~ qbdata$wonderlic))
+r <- cor(qbdata$Rate, qbdata$wonderlic, method="pearson")
+rsquared <- r*r
+df <- nrow(qbdata)-2 
+sr <- sqrt((1-rsquared)/df)
+t <- r/sr
+cor.test(qbdata$wonderlic,qbdata$Rate, method="pearson")
+```
+
+r is:
+
+```{r}
+r
+```
+
+degrees of freedom:
+
+```{r}
+df
+```
+
+r-squared (coefficient of determination) is:
+
+```{r}
+rsquared
+```
+
+The p-value is:
+
+```{r}
+2 * pt(-abs(t),df=df)
+```
+
+We are rejecting the null hypothesis (r=0) pretty strongly here.
+This is getting interesting.
+
+#Analysis
+
+```{r}
+boxplot(qbdata[,c(3,14)])
+hist(qbdata$wonderlic)
+plot(density(qbdata$wonderlic))
+plot(density(qbdata$Rate))
+```
+
+These histograms and density plots give us something to worry about.
+We are not dealing with normal distributions here. Not even close.
+
+Can we repeat the analysis with Spearman's technique?
+
+```{r}
+r <- cor(qbdata$Rate, qbdata$wonderlic, method="spearman")
+rsquared <- r*r
+df <- nrow(qbdata)-2 
+sr <- sqrt((1-rsquared)/df)
+t <- r/sr
+cor.test(qbdata$wonderlic,qbdata$Rate, method="spearman")
+```
+
+r is:
+
+```{r}
+r
+```
+
+degrees of freedom:
+
+```{r}
+df
+```
+
+r-squared is:
+
+```{r}
+rsquared
+```
+
+The p-value is:
+
+```{r}
+2 * pt(-abs(t),df=df)
+```
+
+We see an even stronger effect with Spearman correlation. Spearman makes fewer assumptions because it is based on the rank of the data.
+
+Overall, our results tell us that the Wonderlic Cognitive Ability Test
+explains about 19% - 25% (r-squared) of the variance in NFL QB ratings. This outperforms any other test given during the NFL Combine in our sample data. 
+
+#Evaluation
+
+Many others have rejected findings like ours. There are several reasons for this. 
+
+##Sample Bias
+
+We are looking at a small set of quarterbacks and their data from a single year. We should repeat the experiment for larger data sets spanning multiple years. In fact, anecdotal evidence provides us with some excellent counter-examples to our findings.
+
+##Alternative Hypotheses
+
+Our data does not include players' college performance which may be a strong predictor of QB success in the NFL. We should explore this and other alternative hypotheses.
+
+#Reflection
+
+Given what I know today, I would look seriously at the Wonderlic as an indicator of potential success in NFL quarterbacks. Of course, correlation is not causation. We can find anecdotal evidence that contradicts our findings clearly. Many studies have rejected these findings (Mirabile, 2005). A careful review of those findings would be a reasonable next step for this data mining project.
+
+#Resources
+* <http://www.bigblueview.com/2014/2/17/5408466/2014-nfl-scouting-combine-preview-new-york-giants-draft-prospects>
+
+* <http://nflcombineresults.com/>
+
+* <http://www.nfl.com/combine>
+
+* <http://www.nfl.com/combine/workouts>
+
+* <https://en.wikipedia.org/wiki/Wonderlic_test#Average_score_in_the_NFL_by_position>
+
+* Mirabile, M. (2005). Intelligence and Football: Testing for Differentials in Collegiate Quarterback Passing Performance and NFL Compensation. The Sport Journal. Web: <http://thesportjournal.org/article/intelligence-and-football-testing-for-differentials-in-collegiate-quarterback-passing-performance-and-nfl-compensation/> Accessed 9/9/2015.
+
+* <http://wonderlictestsample.com/>
+
+* <http://www.tandfonline.com/doi/abs/10.1080/08959280902970401#.VeZg_5PGqHs>
+
+* <http://www.newyorker.com/magazine/2008/12/15/most-likely-to-succeed-2>
