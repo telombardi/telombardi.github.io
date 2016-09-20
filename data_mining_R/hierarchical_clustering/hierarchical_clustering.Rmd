@@ -1,0 +1,267 @@
+---
+title: 'Hierarchical Clustering and Distance Metrics'
+output: 
+    tufte::tufte_html:
+      highlight: tango
+---
+
+#Clustering and Distance Metrics
+
+So far, we've been focusing on statistical approaches to data mining. Correlation, for example, uses common statistical concepts like p-value to help us understand linear relationships between variables. Correlation answers the question: what is the relationship between variables? Clustering, on the other hand, answers the question: which observations (samples) are most similar based on their attributes? Clustering is an example of unsupervised learning, meaning that we can perform our operations on an entire data set without any knowledge of its inherent classifications or categories. Clustering helps us to identify the natural groups in our data set.
+
+##Distance Metrics
+
+In order to group our data effectively, we need ways to estimate the distance between two observations. We will employ the following distance metrics to help us estimate the distance between observations in our data.
+
+Let's look at a simple data set with the salary and batting average of players in Major League baseball.
+
+```{r}
+data <- read.csv("http://cis241.washjeff-cis.net/hierarchical_cluster.csv")
+data
+options(digits=10)
+```
+
+Since these distance metrics require lots of precision, the options 
+command above sets the number of digits to 10.
+
+###Euclidean Distance
+
+This is the most common distance metric and the one with which you are probably most familiar.
+
+$$
+\begin{aligned}
+ d(p,q) = \sqrt{\sum_{i=1}^{n}(p_{i} - q_{i})^2}
+\end{aligned}
+$$
+
+If we want to take the Euclidean distance between Player 1 and Player 2.
+We can perform the following calculation.
+
+```{r}
+sqrt((data[1,2]-data[2,2])^2+(data[1,3]-data[2,3])^2)
+```
+
+Geometrically, the Euclidean distance represents the shortest line between two points, the hypotenuse of the triangle.
+
+```{r}
+plot(data$Salary,data$Batting_Avg)
+grid(col="gray")
+segments(data[1,2],data[1,3],data[2,2],data[2,3])
+text(data[1,2],data[1,3],"Player 1",pos=4)
+text(data[2,2],data[2,3],"Player 2",pos=2)
+```
+
+We probably don't want to calculate these distances over and over again for large datasets. Luckily, we don't have to. We can create a distance matrix with a convenient R function.
+
+```{r}
+ed <- dist(data[,2:3], method="euclidean")
+ed
+```
+
+The Euclidean distance is most appropriate when we have continuous data.
+
+##Manhattan Distance
+
+$$
+\begin{aligned}
+ d(p,q) = \sum_{i=1}^{n}|p_{i} - q_{i}|
+\end{aligned}
+$$
+
+If we want to take the Manhattan distance between Player 1 and Player 2.
+We can perform the following calculations.
+
+```{r}
+abs(data[1,2]-data[2,2])+abs(data[1,3]-data[2,3])
+```
+
+Geometrically, the Manhattan distance represents the sum of the sides of a triangle, the sides other than the hypotenuse.
+
+```{r}
+plot(data$Salary,data$Batting_Avg)
+grid(col="gray")
+segments(data[1,2],data[1,3],data[2,2],data[1,3])
+segments(data[2,2],data[1,3],data[2,2],data[2,3])
+text(data[1,2],data[1,3],"Player 1",pos=4)
+text(data[2,2],data[2,3],"Player 2",pos=2)
+```
+
+We can create our distance matrix with the command below.
+
+```{r}
+md <- dist(data[,2:3], method="manhattan")
+md
+```
+
+##Chebyshev Distance
+
+$$
+\begin{aligned}
+ d(p,q) = \max_{i} (|p_{i} - q_{i}|)
+\end{aligned}
+$$
+
+The Chebyshev distance calculates the distance between data points as 
+the greatest difference in a single attribute.  
+
+```{r}
+max(abs(data[1,2]-data[2,2]),abs(data[1,3]-data[2,3]))
+```
+
+Geometrically, the Chebyshev distance represents the longest side of the triangle, other than the hypotenuse.
+
+```{r}
+plot(data$Salary,data$Batting_Avg)
+grid(col="gray")
+segments(data[1,2],data[1,3],data[2,2],data[1,3])
+text(data[1,2],data[1,3],"Player 1",pos=4)
+text(data[2,2],data[2,3],"Player 2",pos=2)
+```
+
+
+```{r}
+cd <- dist(data[,2:3], method="maximum")
+cd
+```
+
+##Critical Thinking about Variable Scale
+
+Do you see anything wrong with the distance matrices we've been using thus far?
+In a sense, all of the distance metrics function more or less like the Chebyshev distance because the scale of salary is so much larger than that of batting average.
+Is this what we really want? Probably not.
+
+When we use clustering algorithms, we almost always want to standardize (or normalize) the scale of our variables to make sure that they are evenly weighted and consistently scaled.
+If we don't do this, we are allowing the scale of variables to define a de facto weight for each of the variables. In this case, the scale of salary makes the contribution of batting average essentially irrelevant for our clusters.
+
+Lucky for us, fixing this is easy. If we subtract the mean from each value and 
+divide by the standard deviation for each variable, we will have our data 
+in a much better format for making comparisons. This technique for standardizing our data is called the Z-score transformation. There are other techniques for accomplishing this, but this is a common technique with useful properties. The technique recenters the mean to 0 and the standard deviation to 1. In other words, this makes common tasks like detecting outliers fairly straight forward.
+
+```{r}
+data$salary_diff <- data$Salary-mean(data$Salary)
+data$salary_norm <- data$salary_diff/(sd(data$Salary))
+data$bat_diff <- data$Batting_Avg-mean(data$Batting_Avg)
+data$bat_norm <- data$bat_diff/(sd(data$Batting_Avg))
+data
+```
+
+Of course, R has a method for this.
+
+```{r}
+scale(data[,2:3])
+```
+
+Then we can take our distance metrics from the normalized or standardized data. This is almost always what we will want to do.
+
+#Hierarchical Clustering
+While distance matrices are useful, they are not particularly useful for interpreting the relationships among many entities. Fortunately, we have a convenient way of representing distance matrices that offers interpretive advantages. Clustering provides us with a technique for grouping entities based on their distances to other entities. Dendrograms are a convenient way to present hierachical clusters.
+
+```{r}
+dm <- dist(scale(data[,2:3]))
+dm
+par(mfrow=c(1,2))
+eclust1 <- hclust(dm, method="single")
+plot(eclust1, main="Single Link Cluster")
+
+eclust2 <- hclust(dm, method="complete")
+plot(eclust2, main="Complete Link Cluster")
+par(mfrow=c(1,1))
+```
+
+Hierarchical clustering is an incredibly powerful tool for analysis. Suppose we wanted to cluster Edgar Anderson's Iris data.
+
+```{r}
+data(iris)
+df <- iris
+head(df)
+```
+
+```{r}
+dm <- dist(df[,1:4], method="euclidean")
+clus <- hclust(dm, method="single")
+plot(clus)
+rect.hclust(clus, k=2)
+```
+
+```{r}
+ct <- cutree(clus, k=2)
+df <- cbind(df,ct)
+table(df$Species,df$ct)
+```
+
+Notice that the clustering method perfectly isolates all Iris setosa observations based on sepal length, sepal width, petal length, and petal width.
+
+#Distances between Categorical Variables
+##Hamming Distance
+
+The Hamming distance helps us calculate the distance between categorical variables.
+This technique is used often with strings.
+
+Let's take a look at some categorical variables.
+
+```{r}
+cat_data <- read.csv("http://cis241.washjeff-cis.net/categorical_data_example.csv")
+cat_data
+```
+
+In this simple data set, we have a list of students (1-5), each student's gender ( 0 = female and 1 = male), and each student's course enrollment for 3 courses. If a student took c1 (course 1), then the value will equal 1. Otherwise, the value will be 0. Ideally, we would like to be able to cluster students based on these characteristics.
+
+The Hamming distance gives us a groovy way to make this happen.
+Let's say that we want to take the Hamming distance between student 1 and student 2.
+
+```{r}
+cat_data[1:2,]
+```
+
+We would compare each attribute value. Every time the attributes do NOT match 
+the distance between those objects increases.
+
+```{r}
+hd <- sum((cat_data[1,2] != cat_data[2,2])+
+              (cat_data[1,3] != cat_data[2,3])+
+              (cat_data[1,4] != cat_data[2,4])+
+              (cat_data[1,5] != cat_data[2,5]))
+hd
+```
+
+Of course, we can use a library to make this happen. Remember to execute the 
+following code in interactive mode instead of your R markdown.
+
+```
+install.packages("stringdist")
+```
+The library we are using likes to work with string representations so the following code takes our variables and converts them into strings of 0s and 1s.
+
+```{r}
+library("stringdist")
+my_data <- with(cat_data, paste0(cat_data[,2], cat_data[,3], cat_data[,4],cat_data[,5]))
+my_data
+stringdistmatrix(my_data,method="hamming")
+```
+
+We can see that our calculation matches that of the library. Cool! Since this produces, a distance matrix, you guessed it. We can plot it!
+
+```{r}
+plot(hclust(stringdistmatrix(my_data,method="hamming")))
+```
+
+Although this is really cool, you might find something troubling here.
+The Hamming distance doesn't really differentiate between gender and course data
+here. Let's think this through: when two students match on gender (either 0=0 or 1=1) this has real meaning in the world. When two records share gender=0, this means that both students are female. This is a genuine point of commonality. On the other hand, the c1, c2, c3 variables are quite different. When two people do NOT take the same course c1=0, do we really believe that this means they have as much in common as two people who did take the same course? Probably not. In other words, the Hamming distance works pretty well when the values have symmetric meanings like gender. It doesn't work as well for fields like c1, c2, c3. For these kinds of fields, we need an asymmetric distance metric like that based on the cosine similarity.
+
+##Cosine Distance
+
+The basic idea behind the cosine distance is that when we have fields that represent the presence or absence of some property, we want to weight the presence of a shared attribute much more than the shared absence of a property. The cosine distance uses concepts from trigonometry to make this happen. Basically, if two fields match on a zero value, this is not counted with the same weight as when two fields match on a value of one. In other words, we want students who have taken more classes together to be closer than those who decided to avoid the same classes.
+
+Of course, there's a package for that. Remember to run the install.packages command outside of your R markdown.
+
+```
+install.packages("proxy")
+```
+
+```{r}
+library("proxy")
+dist(cat_data[,2:5], method="cosine")
+plot(hclust(dist(cat_data[,2:5], method="cosine")))
+```
+
