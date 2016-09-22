@@ -86,6 +86,18 @@ ggplot(project.plus, aes(x=PC1, y=PC2))+
 
 ```
 
+We can also use the somewhat easier technique in the `cluster` package.
+
+```
+install.packages("cluster")
+```
+
+```{r}
+library(cluster)
+clusplot(sdata[,1:4], clusters$cluster, color=TRUE, shade=TRUE,
+   labels=2, lines=0)
+```
+
 We can see that I. versicolor and I. virginica overlap significantly.
 Are there variables that contain more noise than others?
 
@@ -116,7 +128,7 @@ table(data$Species,clusters$cluster)
 We can see that our clustering can be improved by removing noisy variables.
 Although the clusters are not perfectly formed, we have a fairly clean separation of known classes based only on Petal.length and Petal.wdith measurements.
 
-##Outliers can be problem
+##Outliers can be a problem
 Since kmeans is based on the mean of each variable, outliers can throw off 
 the results. Consider if you have any outliers that should be removed.
 
