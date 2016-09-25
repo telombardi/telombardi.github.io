@@ -1,0 +1,391 @@
+---
+title: 'Association Rule Mining'
+output: 
+    tufte::tufte_html:
+      highlight: tango
+---
+
+#Association Rule Mining
+
+The purpose of association rule mining is to reveal entities that frequently occur together.
+We see this type of application in:
+
+1. market basket analysis: what types of products do people tend to purchase together?
+
+2. recommendation systems: people who bought book A also bought book B...
+
+#Data
+
+The Mr. A's Data Set
+
+Chicken|Ice Cream|Tacos
+-------|---------|-----
+0      |1        |1
+1      |0        |1
+1      |0        |1
+1      |0        |1
+0      |0        |1
+0      |1        |0
+1      |0        |1
+1      |0        |1
+0      |1        |0
+0      |0        |1
+
+#Typical Metrics
+
+##Support
+
+Support measures how frequently two (or more) items appear together. Support is the number of times 
+a specific item appears in a transaction divided by the total number of transactions.
+
+The support for chicken is: $supp(c) = 5/10 = .5$ 
+
+We can also calculate the support of two or more items: $supp(x \cup y)$
+
+The support for chicken and tacos is: $supp(c \cup t) = 5/10 = .5$
+
+##Confidence
+
+Confidence measures the likelihood that a transaction includes item Y given that the transaction
+includes item X. 
+
+$conf(x \implies y) = supp(x \cup y)/supp(x)$
+
+The confidence of $conf(c \implies t) = supp(c \cup t)/supp(c) = .5/.5 = 1$
+
+In other words, every time someone purchased chicken she or he also purchased tacos.
+
+Since association rule mining produces many, many rules, we use support and confidence 
+to filter the rules representing combinations that occur too infrequently or with too little 
+confidence to be useful.
+
+##Lift
+
+We also need a way to gauge whether the rules we generate happen by chance or represent a 
+statistically significant effect in our data.
+
+$lift(x \implies y) = supp(x \cup y)/supp(x) * supp(y)$
+
+For example, $lift(c \implies t) = supp(c \cup t)/supp(c) * supp(t) = .5/.4 = 1.25$
+
+Values close to 1 represent rules without much statistical significance. Values larger than 
+1 represent rules not likely to have occurred by chance.
+
+#Analyzing Association Rules in R
+##Example 1: Mr A's.
+
+Let's review the analysis above in R.
+
+```{r}
+data <- read.csv("in-class_mras.csv")
+data
+```
+
+We need to treat the data to prepare it for analysis. In this context, we need to convert our 
+numeric data into logical types representing true or false.
+
+```{r}
+for (i in 1:3){
+    data[,i] <- as.logical(data[,i])
+}
+data
+```
+
+Now the data are properly prepared for analysis so we can load our libraries and get to work.
+
+```{r, warning=FALSE}
+library("arules")
+trans <- as(data, "transactions") 
+image(trans)
+```
+
+First, we load the `arules package`. We then convert our data into transactions which is a special object for analyzing data in this format. Finally, we review our data graphically with the image command.
+
+The `apriori()` command takes our transactions and returns the association rule list for all 
+rules with confidence and support greater than 0. In other words, this command will return 
+all possible rules. We then sort the rules by the lift metric. Finally, we review the sorted rules with the `inspect()` command.
+
+```{r}
+rules <- apriori(trans, parameter=list(conf=0.0,supp=0.0))
+rules.sorted <- sort(rules, by="lift")
+inspect(rules.sorted)
+```
+
+In most cases, we will want to filter our results with confidence and support.
+Let's take a look at rules with a support of 0.25 or greater and a confidence of .5 or greater.
+
+```{r}
+rules <- apriori(trans, parameter=list(conf=0.5,supp=0.25))
+rules.sorted <- sort(rules, by="lift")
+inspect(rules.sorted)
+```
+
+##Example 2: Voting Behavior
+
+We can analyze the voting behavior of politicians with this technique.
+The following data represents the voting behavior of 435 congressional members
+for 16 key votes identified by the Congressional Quarterly Almanac.
+
+<http://archive.ics.uci.edu/ml/datasets/Congressional+Voting+Records>
+
+This data is more complex than our previous example and requires a good deal more 
+cleansing and preparation.
+
+##Load the data
+
+```{r}
+data <- read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/voting-records/house-votes-84.data", sep=",")
+```
+
+##Cleanse the data
+
+```{r}
+sdata <- data
+sdata$republican <- 0
+sdata$republican[sdata[,"V1"]=="republican"] <- 1
+sdata$democrat <- 0
+sdata$democrat[sdata[,"V1"]=="democrat"] <- 1
+```
+
+The code above creates new fields representing republic and democratic party members.
+
+By default, R will assign variable names in the format V1, V2, etc. Since we want to interpret which legislation representatives tend to support together, we want to format the column names to represent our meaningful names.
+
+```{r}
+names(sdata) <- c("party","handicapped-infants",
+                  "water-project-cost-sharing",
+                  "adoption-of-the-budget-resolution",
+                  "physician-fee-freeze",
+                  "el-salvador-aid",
+                  "religious-groups-in-schools",
+                  "anti-satellite-test-ban",
+                  "aid-to-nicaraguan-contras",
+                  "mx-missile",
+                  "immigration",
+                  "synfuels-corporation-cutback",
+                  "education-spending",
+                  "superfund-right-to-sue",
+                  "crime",
+                  "duty-free-exports",
+                  "export-administration-act-south-africa",
+                  "republican",
+                  "democrat")
+```
+
+##Cluster voting behavior
+
+While we are handling categorical data, let's see how we might cluster these data.
+We need to create a matrix in which we make all values zero. Then anything representing a yes vote, we convert to ones.
+
+```{r}
+library("proxy")
+ndata <- matrix(0,nrow=435,ncol=16)
+for(i in 2:17){
+    ndata[sdata[,i]=="y",(i-1)] <- 1 
+}
+```
+
+This means that we can construct a distance matrix using the cosine distance which is a reasonable choice for these kinds of data. We can use this to construct a dendrogram. 
+
+```{r}
+hc <- hclust(dist(ndata, method="cosine"))
+plot(hc)
+```
+
+We can also use the `cluster` library to create clusters with special distances like the cosine distance. 
+
+```{r}
+library(cluster)
+d <- dist(ndata, method="cosine")
+pc <- pam(d, 2, diss=TRUE)
+clusplot(pc)
+```
+
+##Back to Association Rules
+
+We join our data to the original party labels for convenience.
+
+```{r}
+tdata <- cbind(sdata[,1],ndata, sdata[,18:19])
+```
+
+Add the names to our new data frame.
+
+```{r}
+names(tdata) <- c("party","handicapped-infants",
+                  "water-project-cost-sharing",
+                  "adoption-of-the-budget-resolution",
+                  "physician-fee-freeze",
+                  "el-salvador-aid",
+                  "religious-groups-in-schools",
+                  "anti-satellite-test-ban",
+                  "aid-to-nicaraguan-contras",
+                  "mx-missile",
+                  "immigration",
+                  "synfuels-corporation-cutback",
+                  "education-spending",
+                  "superfund-right-to-sue",
+                  "crime",
+                  "duty-free-exports",
+                  "export-administration-act-south-africa",
+                  "republican",
+                  "democrat")
+```
+
+We convert all of our data to logical data types.
+
+```{r}
+for(i in 2:19){
+    tdata[,i] <- as.logical(tdata[,i]) 
+}
+```
+
+We convert our data to transactions.
+
+```{r}
+trans <- as(tdata[,2:19], "transactions") 
+image(trans)
+```
+
+Finally, we can generate our rules. We only want to see rules with a minimum support of .3 and minimum confidence of .95. We also want to look at rules with democrat and republican on the right hand side of our rule set. In other words, we want to know how reliably a set of votes helps us predict a party. We could easily adjust this to focus on other types of issues.
+
+```{r}
+rules <- apriori(trans, parameter=list(conf=.95,supp=.3),
+                 appearance=list(rhs=c("democrat","republican"),
+                                 default="lhs"))
+rules.sorted <- sort(rules, by="lift")
+inspect(rules.sorted)
+```
+
+##Additional Analysis
+
+We can explore the size and distribution of transactions.
+
+```{r}
+summary(rules)
+summary(size(trans))
+```
+
+We can also explore other measures of interest.
+In particular, we can use Fishers Exact Test to confirm that the results 
+we have are statistically significant. Fishers Exact Test provides the same 
+information as lift, but expresses that information in the p-value familiar to other statistical procedures. As an aside, Fishers Exact Test is used to confirm that differentially expressed genes are statistically significant.
+
+```{r}
+measures <- interestMeasure(rules, measure=c("coverage","support","fishersExactTest","confidence","lift"),
+                             transactions=trans)
+summary(measures)
+measures.sorted <- measures[order(-measures$lift),]
+inspect(rules.sorted)
+```
+
+## Alternative Formats
+
+Transactional data can be presented in a number of formats. We can read these other formats as well when necessary.
+
+For example, suppose we have transactional data in the following format.
+```
+Ice Cream,Tacos
+Chicken,Tacos
+Chicken,Tacos
+Chicken,Tacos
+Tacos
+Ice Cream
+Chicken,Tacos
+Chicken,Tacos
+Ice Cream
+Tacos
+```
+We could read this data with the following command:
+
+```{r}
+trans_list <- read.transactions("in-class_mras_trans.csv",format="basket",sep=",")
+image(trans_list)
+new_rules <- apriori(trans_list, parameter=list(conf=0.0,supp=0.0))
+new_rules.sorted <- sort(new_rules, by="lift")
+inspect(new_rules.sorted)
+```
+
+Or we might see data like this.
+
+```
+1,Ice Cream,Tacos
+2,Chicken,Tacos
+3,Chicken,Tacos
+4,Chicken,Tacos
+5,Tacos
+6,Ice Cream
+7,Chicken,Tacos
+8,Chicken,Tacos
+9,Ice Cream
+10,Tacos
+```
+We could read this data with the following command:
+
+```{r}
+trans_list <- read.transactions("mras_t.csv",format="basket",sep=",",
+                                col=1)
+image(trans_list)
+new_rules <- apriori(trans_list, parameter=list(conf=0.0,supp=0.0))
+new_rules.sorted <- sort(new_rules, by="lift")
+inspect(new_rules.sorted)
+```
+
+Finally, we might see...
+
+```
+TID,ITEM
+1,Ice Cream
+1,Tacos
+2,Chicken
+2,Tacos
+3,Chicken
+3,Tacos
+4,Chicken
+4,Tacos
+5,Tacos
+6,Ice Cream
+7,Chicken
+7,Tacos
+8,Chicken
+8,Tacos
+9,Ice Cream
+10,Tacos
+```
+And we could...
+
+```{r}
+trans_list <- read.transactions("mras_long.csv",format="single",sep=",",
+                                cols=c("TID","ITEM"))
+image(trans_list)
+new_rules <- apriori(trans_list, parameter=list(conf=0.0,supp=0.0))
+new_rules.sorted <- sort(new_rules, by="lift")
+inspect(new_rules.sorted)
+```
+
+#The Voting Record Again
+
+We can also run the algorithm with significantly less preprocessing.
+
+```{r}
+data <- read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/voting-records/house-votes-84.data", sep=",")
+names(data) <- c("party","handicapped-infants",
+                  "water-project-cost-sharing",
+                  "adoption-of-the-budget-resolution",
+                  "physician-fee-freeze",
+                  "el-salvador-aid",
+                  "religious-groups-in-schools",
+                  "anti-satellite-test-ban",
+                  "aid-to-nicaraguan-contras",
+                  "mx-missile",
+                  "immigration",
+                  "synfuels-corporation-cutback",
+                  "education-spending",
+                  "superfund-right-to-sue",
+                  "crime",
+                  "duty-free-exports",
+                  "export-administration-act-south-africa")
+rules <- apriori(data,parameter=list(conf=0.95,supp=(0.3)))
+rules.sorted <- sort(rules, by="lift")
+inspect(head(rules.sorted, 10))
+```
