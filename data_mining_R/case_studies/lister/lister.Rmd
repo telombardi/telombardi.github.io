@@ -1,5 +1,6 @@
 ---
 title: "Case Study: Lister and the Development of Antiseptic Techniques"
+encoding: UTF-8
 output:
   tufte::tufte_handout: 
   highlight: zenburn
