@@ -1,0 +1,169 @@
+---
+title: "Explanatory Modeling with Linear Regression"
+output: html_document
+---
+
+#Linear Regression: Basics
+
+Linear regression is a staple of researchers in the sciences and social sciences.
+Rather than provide you with lots of definitions, let's just take a look at a simple case with which we are somewhat familiar.
+
+```{r}
+data <- read.csv("http://cis241.washjeff-cis.net/cigarettes.csv")
+head(data)
+```
+
+You will recall the cigarette/longevity data we analyzed when discussing correlation. Let's graph the data.
+
+```{r}
+plot(data$cigarettes,data$longevity,ylim=c(50,100),xlim=c(0,50),
+     xlab="Average number of cigarettes smoked daily", ylab="Longevity in years",
+     main="Longevity modeled as number of cigarettes smoked")
+abline(lm(longevity ~ cigarettes, data=data))
+```
+
+When we discussed correlation, we drew a fitted line to the data to emphasize the idea that we were reviewing linear relationships between our variables. As it turns out, we were also creating a simple linear model of the data.
+
+$y = mx + b$
+
+where m is a coefficient representing the slope of the line, x represents an independent variable, b represents the intercept and y represents the dependent variable. 
+
+The code below develops a linear model in which longevity in years is modeled as the average number of cigarettes smoked daily.
+
+```{r}
+model <- lm(longevity ~ cigarettes,data=data)
+model
+```
+
+The model returns our input formula and the coefficients of our linear model.
+The intercept is `r model$coefficients[1]` and the coefficient of cigarettes 
+is `r model$coefficients[2]`.
+
+In our simple example, we can model longevity with the following formula:
+
+$longevity = `r model$coefficients[2]`*cigarettes + `r model$coefficients[1]`$
+
+```{r}
+plot(data$cigarettes,data$longevity,ylim=c(50,100),xlim=c(0,50),
+     xlab="Average number of cigarettes smoked daily", ylab="Longevity in years",
+     main="Longevity modeled as number of cigarettes smoked")
+abline(lm(longevity ~ cigarettes, data=data))
+points(0,model$coefficients[1],col="red", pch=8)
+text(0,model$coefficients[1],paste("intercept=", round(model$coefficients[1],2)),pos=4, col="red")
+abline(v=0,col="red")
+text(40,60,paste("slope=",round(model$coefficients[2],2)),col="red")
+```
+
+In a linear equation, the intercept represents the position where the line crosses the y axis. The coefficient related to cigarettes represents the slope of the line in our model. This gives us some powerful capabilities because these features will allow us to predict the longevity of a person based on cigarette consumption.
+
+For example, let's say that I smoke 15 cigarettes a day. How long would our model predict that I will live? Since I know the value of cigarettes, I can solve for the number of years I'm expected to live:
+
+$longevity = `r model$coefficients[2]`*15 + `r model$coefficients[1]`$
+
+```{r}
+prediction <- model$coefficients[2]*15+model$coefficients[1]
+prediction
+```
+
+Of course, we can plot this prediction on our graph.
+
+```{r}
+plot(data$cigarettes,data$longevity,ylim=c(50,100),xlim=c(0,50),
+     xlab="Average number of cigarettes smoked daily", ylab="Longevity in years",
+     main="Longevity modeled as number of cigarettes smoked")
+abline(lm(longevity ~ cigarettes, data=data))
+points(0,model$coefficients[1],col="red", pch=8)
+text(0,model$coefficients[1],paste("intercept=", round(model$coefficients[1],2)),pos=4, col="red")
+abline(v=0,col="red")
+text(40,60,paste("slope=",round(model$coefficients[2],2)),col="red")
+points(15,round(prediction,2),col="blue", pch=8)
+text(15,round(prediction,2),paste("predicted value=",round(prediction,2)),pos=4, col="blue")
+segments(15,0,15,round(prediction,2),col="blue",lty=2)
+segments(0,round(prediction,2),15,round(prediction,2),col="blue",lty=2)
+```
+
+The common sense way to think of this model is that every cigarette you smoke reduces your life by a little bit more than half a year.
+
+As you can imagine, models like these have a decent amount of error associated with them. We'll have to think about these errors carefully to use these kinds of models effectively.
+
+If we look closely at our graph, we can see that no input value for cigarettes perfectly lines up with our prediction. Some are fairly close, others are pretty far away.
+
+Let's consider the quality of the predictions for points 4 and 5.
+
+```{r}
+data[4,] 
+model$coefficients[2]*data[4,1]+model$coefficients[1]
+data[4,2]-(model$coefficients[2]*data[4,1]+model$coefficients[1])
+model$residuals[4]
+```
+
+Point 4 is only off by 2.5 years in its prediction. Not too shabby for such a simple model. The difference between a predicted value and an actual value is called a __residual__. Analyzing the residuals gives us some additional information about the quality of our model.
+
+Unfortunately, other points like point 5 are not quite as accurate.
+
+```{r}
+data[5,] 
+model$coefficients[2]*data[5,1]+model$coefficients[1]
+data[5,2]-(model$coefficients[2]*data[5,1]+model$coefficients[1])
+model$residuals[5]
+```
+
+In this case, we're off by about 10 years. Oh well. Let's represent these residuals graphically.
+
+```{r}
+plot(data$cigarettes,data$longevity,ylim=c(50,100),xlim=c(0,50),
+     xlab="Average number of cigarettes smoked daily", ylab="Longevity in years",
+     main="Longevity modeled as number of cigarettes smoked")
+abline(lm(longevity ~ cigarettes, data=data))
+points(data[4,1],data[4,2],col="red", pch=8)
+text(data[4,1],data[4,2],"Point 4",pos=2, col="red")
+points(data[5,1],data[5,2],col="red", pch=8)
+text(data[5,1],data[5,2],"Point 5",pos=2, col="red")
+points(data[4,1],model$coefficients[2]*data[4,1]+model$coefficients[1],col="blue", pch=8)
+text(data[4,1],model$coefficients[2]*data[4,1]+model$coefficients[1],"Prediction 4",pos=2, col="blue")
+points(data[5,1],model$coefficients[2]*data[5,1]+model$coefficients[1],col="blue", pch=8)
+text(data[5,1],model$coefficients[2]*data[5,1]+model$coefficients[1],"Prediction 5",pos=2, col="blue")
+segments(data[4,1],data[4,2],data[4,1],model$coefficients[2]*data[4,1]+model$coefficients[1],col="blue",lty=2)
+segments(data[5,1],data[5,2],data[5,1],model$coefficients[2]*data[5,1]+model$coefficients[1],col="blue",lty=2)
+```
+
+In geometric terms, residuals measure the distance between an actual value and its associated predicted value in our linear model.
+
+So now we have enough background to review the model output.
+
+```{r}
+summary(model)
+```
+
+##Interpreting the output of a linear model
+
+__Call__ repeats our model parameters.
+
+__Residuals__ gives us basic descriptive statistics about our residuals.
+
+Basically, we want the residuals (the error) to be randomly distributed around our linear model. Ideally, we want the distribution of our residuals to approximate a normal distribution.
+
+__Coefficients__ provides us with the intercept and model coefficients. For each independent variable and intercept, the model gives us the following information.
+
+_Estimate_ is the estimate of the model coefficient. It represents the 
+arithmetic mean of the change in the response variable for 1 unit of 
+change in the predictor variable. In our example, for every cigarette smoked, a person loses an average of about .6 years.
+
+_Std. Error_ is the standard error of the model coefficient (estimate). This is the standard deviation of the sampling statistic (model coefficient). 
+
+_t value_ is the t-statistic used for calculating the p-value.
+
+_Pr(>|t|)_ is the p-value. The null hypothesis for model coefficients is that the true coefficient is 0. When a coefficient is 0, it drops out of the model completely because it has no effect on the independent variable. The p value tells us the probability of finding the reported estimate if the real population coefficient were 0.
+
+_stars_ give us a visual representation of our p-value significance test.
+
+__Residual standard error__ is the standard deviation of the sampling statistic (residual standard deviation). In a sense, this gives us the spread of residuals (error) around the inferred population mean. 
+
+__Multiple R-squared__ is the goodness of fit statistic. A perfectly fit line will have an R-squared value of 1. 
+
+__Adjusted R-squared__ is a version of R-squared that compensates for the number of predictor variables in the model.
+
+__F-statistic__ is similar to our t-statistic in that it helps us to calculate a p-value for the entire linear model.
+
+__p-value__ is the probability value of seeing a fit like this if in fact there is no relationship between the independent and dependent variables. Where R-squared tells us the goodness of fit, the p-value tells us how likely it is that the fit occurred purely by chance. 
+
