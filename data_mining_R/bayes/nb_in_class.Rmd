@@ -1,0 +1,75 @@
+---
+title: "Naive Bayes"
+output: html_document
+---
+
+#Naive Bayes Example
+##Load Data
+
+```{r}
+train <- read.csv("in_class_nb.csv", header=TRUE)
+summary(train)
+```
+
+We don't have much to clean up in our data so we can jump to the 
+model phase.
+
+#Construct Model
+
+```{r}
+library("e1071")
+#This will reproduce our spreadsheet calculations
+bm <- naiveBayes(sport ~ height + endurance, data=train)
+bm
+#This is how we want to run it when we're working with our data
+#bm <- naiveBayes(sport ~ height + endurance, data=train, laplace=1)
+#bm
+```
+
+##Evaluate Model
+
+```{r}
+train$class <- predict(bm, newdata=train, type="class")
+train$preds <- predict(bm, newdata=train, type="raw")
+```
+
+When we evaluate our models, we run our predictions against the 
+training data so we can compare our predictions to the known classes.
+
+##Evaluate the Results
+
+```{r}
+results <- table(train$class,train$sport)
+results
+bb_total_pred <- sum(results[1,])
+bb_total_class <- sum(results[,1])
+bb_precision <- results[1,1]/bb_total_pred
+bb_recall <- results[1,1]/bb_total_class
+
+soc_total_pred <- sum(results[2,])
+soc_total_class <- sum(results[,2])
+soc_precision <- results[2,2]/soc_total_pred
+soc_recall <- results[2,2]/soc_total_class
+
+accuracy <- (results[1,1]+results[2,2])/sum(results)
+```
+
+Confusion Matrix `r sum(results)`   |Condition Basketball|Condition Soccer|Total_Predicted|Precision
+-------------------|--------------------|------------------|---------------|---------
+__Predicted Basketball__|`r results[1,1]`|`r results[1,2]` |`r bb_total_pred`|`r bb_precision`
+__Predicted Soccer__|`r results[2,1]`    |`r results[2,2]` |`r soc_total_pred`|`r soc_precision`
+__Total_Condition__| `r bb_total_class`  | `r soc_total_class`|               |
+__Recall__         |`r bb_recall`        |`r soc_recall`       |              |
+
+The accuracy is `r accuracy`
+
+##Deployment
+
+Let's make our predictions on new data.
+
+```{r}
+test <- read.csv("in_class_nb_test.csv", header=TRUE)
+test$class <- predict(bm, newdata=test, type="class")
+test$preds <- predict(bm, newdata=test, type="raw")
+test
+```
