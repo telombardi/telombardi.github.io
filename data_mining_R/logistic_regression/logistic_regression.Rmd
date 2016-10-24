@@ -1,0 +1,213 @@
+---
+title: "Logistic Regression and Classification"
+output: html_document
+---
+
+#Classification with Logistic Regression
+##Low Birth Weight Babies Again
+
+In the last few classes, we've used linear regression to predict the 
+birth weight of babies for the purpose of allocating resources. Although 
+linear regression can help us do this, we have other ways to approach this problem.
+
+Logistic regression offers an appealing alternative because it allows us to 
+predict classes instead of values. In this case, we want to predict if a newborn 
+will be classified as low birth weight or not.
+
+##Logistic Regression Basics
+###Load the Training Data
+
+```{r}
+train <- read.csv("http://cis241.washjeff-cis.net/low_birth_weight_train.csv", header=TRUE)
+str(train)
+```
+
+###Remove fields to be excluded from analysis
+
+The following code removes all fields except AGE, LWT, RACE, SMOKE, and LOW.
+LOW is a variable defining our classes: 1 = low birth weight; 0 = not low birth weight
+
+```{r}
+train <- train[,c(2,3,4,5,6)]
+str(train)
+```
+
+###Create factors where necessary
+
+Convert the LOW variable to a logical.
+
+```{r}
+train$RACE <- factor(train$RACE)
+train$SMOKE <- factor(train$SMOKE)
+train$LOW <- as.logical(train$LOW)
+str(train)
+```
+
+##Construct the Model
+
+`glm()` stands for generalized linear model. By specifying the family and link 
+function, we tell R to perform logistic regression.
+
+```{r}
+fm <- glm(LOW ~ AGE + LWT + RACE + SMOKE, data=train, family=binomial(link="logit"))
+fm 
+#summary(fm)
+```
+
+We can take summaries of our models as we did with linear regression. For now, we'll
+skip this step.
+
+##Refine the Model
+
+We can perform backwards elimination if we like.
+
+```{r}
+rm <- step(fm, direction = "backward", trace=FALSE )
+rm
+#summary(rm)
+```
+
+##Predict
+###Load our test data
+
+```{r}
+test <- read.csv("http://cis241.washjeff-cis.net/low_birth_weight_test.csv", header=TRUE)
+```
+
+###Prepare the test data
+
+```{r}
+test <- test[,2:4]
+```
+
+We also need to convert RACE and SMOKE into factors.
+
+```{r}
+test$RACE <- factor(test$RACE)
+test$SMOKE <- factor(test$SMOKE)
+str(test)
+```
+
+##Make Predictions
+
+Let's make our predictions.
+
+```{r}
+test$preds_prob <- predict(rm, newdata=test, type="response")
+test
+```
+
+When we pull back our predictions with `type="response"`, we can see the prediction
+in terms of probability.
+
+```{r}
+test$preds_logit <- predict(rm, newdata=test)
+test
+```
+
+When we pull back our predictions without a type definition, we will see the prediction
+in terms of the log-odds(logit).
+
+For an in-depth explanation of the log-odds and its relationship to 
+probabilities, see the following site:
+http://www.ats.ucla.edu/stat/mult_pkg/faq/general/odds_ratio.htm
+
+##Picking a class boundary
+
+```{r}
+train$preds_prob <- predict(rm, newdata=train, type="response")
+head(train)
+library(ggplot2)
+ggplot(train,aes(x=preds_prob,color=LOW, linetype=LOW))+geom_density()
+```
+
+Since we have a good deal of overlap, we've got our work cut out for us.
+Let's start with the common sense idea. Anything with a probability greater 
+than 0.5 will be classified as true.
+
+```{r}
+train$class <- FALSE
+train[train$preds_prob>0.5,]$class <- TRUE
+head(train)
+```
+
+##Evaluating our results
+
+We will evaluate the results of many classifiers. So we'll want a handy way to review
+the results of our classifications.
+
+Confusion Matrix   |Condition positive|Condition negative
+-------------------|------------------|------------------
+__Prediction positive__|True positive(tp) |False positive(fp)
+__Prediction negative__|False negative(fn)|True negative(tn)
+
+##Build our confusion matrix
+
+```{r}
+tp <- nrow(train[train$class==TRUE & train$LOW==TRUE,])
+fp <- nrow(train[train$class==TRUE & train$LOW==FALSE,])
+fn <- nrow(train[train$class==FALSE & train$LOW==TRUE,])
+tn <- nrow(train[train$class==FALSE & train$LOW==FALSE,])
+```
+
+Confusion Matrix   |Condition positive|Condition negative
+-------------------|------------------|------------------
+__Prediction positive__|`r tp`        |`r fp`
+__Prediction negative__|`r fn`        |`r tn`
+
+###Accuracy
+
+Accuracy tells us the percentage of predictions that were correct.
+
+$Accuracy = \dfrac{tp+tn}{tp+tn+fp+fn}$
+
+For our example, the accuracy is:
+
+$Accuracy = \dfrac{`r tp`+ `r tn`}{`r tp`+`r tn`+`r fp`+`r fn`}$
+
+$Accuracy = `r (tp+tn)/(tp+tn+fp+fn)`$
+
+`r round(((tp+tn)/(tp+tn+fp+fn))*100,2)`% of our predictions were correct.
+
+###Precision
+
+How many of our positive predictions (tp) were correct?
+
+$Precision = \dfrac{tp}{tp+fp}$
+
+$Precision = \dfrac{`r tp`}{`r tp` + `r fp`}$
+
+$Precision = `r tp/(tp+fp)`$
+
+Unfortunately, we are only right about half of the time when we make a positive 
+prediction. 
+
+###Recall
+
+How many low birth babies would we actually find with our classifier?
+
+$Recall = \dfrac{tp}{tp+fn}$
+
+$Recall = \dfrac{`r tp`}{`r tp`+`r fn`}$
+
+$Recall = `r tp/(tp+fn)`$
+
+Recall exposes our problem: our classifier cannot find many cases which in fact
+are low birth weight cases.
+
+Confusion Matrix   |Condition positive|Condition negative|Precision
+-------------------|------------------|------------------|--------------
+__Prediction positive__|`r tp`        |`r fp`            |`r tp/(tp+fp)`
+__Prediction negative__|`r fn`        |`r tn`            |
+__Recall__             |`r tp/(tp+fn)`|                  |
+
+##Adjust our cutoff for class boundary if necessary
+
+In this case, we'll leave it as .5.
+
+```{r}
+test$class <- FALSE
+test[test$preds_prob>0.5,]$class <- TRUE
+test
+```
+
