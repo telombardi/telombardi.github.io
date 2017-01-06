@@ -1,0 +1,17 @@
+---
+title: "Business Information Systems Course Site"
+output: 
+  html_document:
+    css: styles.css
+---
+
+![](logo.jpg)
+#Introduction
+
+This course website provides updates and reminders for students in CIS 210. Please check this website often for the most current course notes and other information. 
+
+
+Class Meeting | Topic               | Preparation Materials| Notes and Reminders
+--------------|---------------------|----------------------|-------
+1/9						|	Introduction and Course Overview | [Syllabus](cis210_syllabus.pdf) | Send introductory email to me by 1/11
+1/11					| Introduction and Course Overview | Read DC 12, [Notes](introduction_2_bis.html) | Syllabus Quiz
