@@ -38,7 +38,7 @@ __Metadata__ is a description of data. When you fill out an online form, the fie
 
 The field names provide context for users helping them to input appropriate data into the form.
 
-Even this simple form defines a process for collecting data so that it can be transformed into information. The CAPTCHA (__C__ompletely __A__utomated __P__ublic __T__uring test to tell __C__omputers and __H__umans __A__part) ensures that the user filling out the form is in fact a person rather than a bot. In other words, the website is designed to check the quality of the data being input to ensure that each record represents a real user. Quality data is much easier to transform into useful information.
+Even this simple form defines a process for collecting data so that it can be transformed into information. The CAPTCHA ( __C__ ompletely __A__ utomated __P__ ublic __T__ uring test to tell __C__ omputers and __H__ umans __A__ part) ensures that the user filling out the form is in fact a person rather than a bot. In other words, the website is designed to check the quality of the data being input to ensure that each record represents a real user. Quality data is much easier to transform into useful information.
 
 Although there are many definitions of information (Floridi, 2005), for the purposes of this class, __information__ is processed data that is meaningful to a particular audience in a particular context.
 
@@ -111,7 +111,7 @@ __Source__: The 5 Components of an Information System. <https://www.youtube.com/
 
 #Examples of Careers in Technology
 
-[Classroom exercise: Find an example of career in technology that you find compelling.]
+[Classroom exercise: Find an example of a career in technology that you find compelling.]
 
 #Sources
 

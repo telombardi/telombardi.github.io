@@ -6,6 +6,7 @@ output:
 ---
 
 ![](logo.jpg)
+
 #Introduction
 
 This course website provides updates and reminders for students in CIS 210. Please check this website often for the most current course notes and other information. 
