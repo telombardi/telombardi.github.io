@@ -1,0 +1,19 @@
+---
+title: "Information Systems Course Site"
+output: 
+  html_document:
+    css: styles.css
+---
+
+![](logo.jpg)
+
+#Introduction
+
+This course website provides updates and reminders for students in BUS 525. Please check this website often for the most current course notes and other information. 
+
+
+Class Meeting | Topic               | Preparation Materials| Notes and Reminders
+--------------|---------------------|----------------------|-------
+1/9						|	Introduction and Course Overview | [Syllabus](bus525_syllabus.pdf), [Notes](introduction_2_is.html)  | Send introductory email to me by 1/16
+1/16          | No Class | Please read: | something
+1/23					| User Needs | Reading | Quiz
