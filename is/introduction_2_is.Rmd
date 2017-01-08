@@ -165,7 +165,7 @@ Read the extremely short "Manifesto for Agile Software Development" to understan
 
 Read the "Principles behind the Agile Manifesto": <http://agilemanifesto.org/principles.html>
 
-For more information, wath this short video about Agile development.
+For more information, watch this short video about Agile development (12 minutes).
 
 ```{r echo=FALSE}
 embed_youtube(id = "Z9QbYZh1YXY")
