@@ -14,6 +14,6 @@ This course website provides updates and reminders for students in BUS 525. Plea
 
 Class Meeting | Topic               | Preparation Materials| Notes and Reminders
 --------------|---------------------|----------------------|-------
-1/9						|	Introduction and Course Overview | [Syllabus](bus525_syllabus.pdf), [Notes](introduction_2_is.html)  | Send introductory email to me by 1/16
-1/16          | No Class | Please read: | something
-1/23					| User Needs | Reading | Quiz
+1/9						|	[Introduction and Course Overview](introduction_2_is.html) | [Syllabus](bus525_syllabus.pdf); [Student Survey](student_survey.docx)  | Send introductory email to me by 1/16
+1/16          | No Class | Please begin reading for next week. | 
+1/23					| Understanding and Documenting User Needs | [Human Computer Interaction - brief intro](https://www.interaction-design.org/literature/book/the-encyclopedia-of-human-computer-interaction-2nd-ed/human-computer-interaction-brief-intro); [Complete Beginner's Guide to Interaction Design](http://www.uxbooth.com/articles/complete-beginners-guide-to-interaction-design/); [Interaction Design - brief intro](https://www.interaction-design.org/literature/book/the-encyclopedia-of-human-computer-interaction-2nd-ed/interaction-design-brief-intro)  | Hint: Prepare for reading quiz

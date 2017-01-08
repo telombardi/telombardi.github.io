@@ -14,5 +14,5 @@ This course website provides updates and reminders for students in CIS 210. Plea
 
 Class Meeting | Topic               | Preparation Materials| Notes and Reminders
 --------------|---------------------|----------------------|-------
-1/9						|	Introduction and Course Overview | [Syllabus](cis210_syllabus.pdf) | Send introductory email to me by 1/11
-1/11					| Introduction and Course Overview | Read DC 12, [Notes](introduction_2_bis.html) | Syllabus Quiz
+1/9						|	Introduction and Course Overview | [Syllabus](cis210_syllabus.pdf); [Student Survey](student_survey.docx) | Send introductory email to me by 1/11
+1/11					| [Introduction and Course Overview](introduction_2_bis.html) | Read DC 12 | Syllabus Quiz
