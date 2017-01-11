@@ -11,8 +11,16 @@ output:
 
 This course website provides updates and reminders for students in CIS 210. Please check this website often for the most current course notes and other information. 
 
+#Announcements
+
+1. My UVI email is: thomas.lombardi@uvi.edu
+2. Over the weekend, I will integrate Blackboard into the class.
+
+#Schedule
 
 Class Meeting | Topic               | Preparation Materials| Notes and Reminders
 --------------|---------------------|----------------------|-------
 1/9						|	Introduction and Course Overview | [Syllabus](cis210_syllabus.pdf); [Student Survey](student_survey.docx) | Send introductory email to me by 1/11
 1/11					| [Introduction and Course Overview](introduction_2_bis.html) | Read DC 12 | Syllabus Quiz
+1/16          | No class            | Read DC 1 |
+1/18          | Intro to Computer Hardware | Read DC 1 | Be prepared for a quiz
