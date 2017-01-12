@@ -15,14 +15,14 @@ img {
 h1 {
 	text-align: left;
     color: black;
-	font-family: Verdana,Geneva,san-serif;
+	font-family: Courier,sans-serif;
 	font-size: 36px;	
 }
 
 h2 {
 	text-align: left;
     color: black;
-	font-family: Verdana,Geneva,san-serif;
+	font-family: Courier,sans-serif;
 	font-size: 30px;	
 }
 
@@ -36,16 +36,51 @@ a:hover {
 	text-decoration: underline overline;
 }
 
+.huge {
+   color: black;
+   font-family: Herculanum, serif;	
+   font-size: 60px;
+}
+
 .large {
 	color: black;
-	font-family: Verdana,Geneva,san-serif;
+	font-family: Herculanum, serif;	
 	font-size: 48px;
 }
 
 .medium {
 	color: black;
-	font-family: Verdana,Geneva,san-serif;
+	font-family: Verdana,Geneva,sans-serif;
 	font-size: 36px;
+}
+
+.highlight{
+    color: black;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 24px;	
+    text-align: justified;
+}
+.small {
+	color: black;
+	font-family: Courier,sans-serif;
+	font-size: 22px;
+}
+
+.node {
+    fill: #ccc;
+    stroke: #000;
+    stroke-width: 2px;
+    r:40px;
+}
+
+.node:hover{
+    fill: LightSkyBlue;	
+    r:100px;
+}
+
+.link {
+    stroke: #777;
+    stroke-width: 4px;
 }
 
 #current {
@@ -56,7 +91,7 @@ a:hover {
 button.accordion {
     background-color: #eee;
     color: black;
-	font-family: Verdana,Geneva,san-serif;
+	font-family: Courier, sans-serif;	
 	font-size: 36px;
     cursor: pointer;
     padding: 18px;
@@ -69,7 +104,7 @@ button.accordion {
 
 /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 button.accordion.active, button.accordion:hover {
-    background-color: #ddd;
+    background-color: LightSkyBlue;
 }
 
 /* Style the accordion panel. Note: hidden by default */
@@ -78,7 +113,7 @@ div.panel {
     background-color: #FFFFF3;
     display: none;
 	color: black;
-	font-family: Verdana,Geneva,san-serif;
+	font-family: Courier,sans-serif;
 	font-size: 24px;
 	text-align: left;
 }
@@ -201,8 +236,12 @@ width: 640px;
 	color: #fff;
 	text-decoration: none;
 	padding: 20px;
-	font-size: 20px;
-	font-family: Verdana,Geneva,san-serif;
+	font-size: 24px;
+	font-family: Courier,sans-serif;
 }
 
+.image_title a:hover {
+    color: LightSkyBlue;
+	text-decoration: underline overline;
+}
 
