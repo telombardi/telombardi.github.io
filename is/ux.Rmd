@@ -1,0 +1,92 @@
+---
+title: 'Information Systems: Online Course Notes'
+output: 
+  html_document:
+    css: styles.css
+---
+
+![](logo.jpg)
+
+#Understanding and Documenting User Needs
+
+Question: should users adjust their working practices to technology or should technology be shaped to meet the needs of workers?
+
+
+
+##Man Hits Computer
+
+```{r echo=FALSE}
+library(htmltools)
+library(vembedr)
+embed_youtube(id = "2H7NZ0GNIIE")
+```
+
+Source: https://www.youtube.com/watch?v=2H7NZ0GNIIE
+
+##Computer says no
+
+```{r echo=FALSE}
+embed_youtube(id = "0n_Ty_72Qds")
+```
+
+Source: https://www.youtube.com/watch?v=0n_Ty_72Qds
+
+Source: https://www.youtube.com/watch?v=sX6hMhL1YsQ
+
+##The machine knows
+
+```{r echo=FALSE}
+embed_youtube(id = "BIakZtDmMgo")
+```
+
+Source: https://www.youtube.com/watch?v=BIakZtDmMgo
+
+
+##PC Load Letter
+
+##Real Life Interaction Horror Stories on USVI
+
+Donating to Wikipedia
+
+AirBnb
+
+
+#The History of Human-Computer Interaction (HCI) and UX Design
+
+In the 1960s, IT professionals and specialists used computers to perform highly specialized tasks. In this context, computers did not have to be easy to use because the highly trained professionals operating the equipment were in fact the only users of such machines. They were well paid to learn the interface regardless of how difficult it might be to use.
+
+[punch card interface]
+
+In the 1970s and 1980s, personal computers started to broaden the user base. More and more people were interested in using computers for their own ends. In this new context, complex interfaces might deter many users as consumers and might decrease productivity at the workplace. In this period, usability and interface design gained a new importance in the world of information systems.
+
+[CLI]
+
+Since software had always been designed for experts, software developers trained in the 1960s had little interest or training in usability. They tended to write software for people like themselves, experts with a high degree of technical knowledge. Unfortunately, this audience model served poorly for the kinds of software with broad appeal to many different kinds of users.
+
+[GUI]
+
+#Regulatory Considerations
+
+ADA and Section 508 Compliance
+http://www.techrepublic.com/blog/web-designer/creating-an-ada-compliant-website/
+
+https://www.sitepoint.com/designing-disabilities-section-508-international-accessibility-compliance-beginners/
+
+ADA applies in territories
+
+https://www.access-board.gov/the-board/laws/americans-with-disabilities-act-intro
+https://www.access-board.gov/guidelines-and-standards/communications-and-it/about-the-section-508-standards
+https://www.eeoc.gov/eeoc/history/35th/thelaw/rehab_act-1973.html
+
+
+#
+
+#Essentials of Interaction Design
+
+Source: http://tv.adobe.com/watch/classroom-five-essential-principles-of-interaction-design/part-1-five-essential-principles-of-interaction-design/
+
+
+#Sources
+
+https://www.bloomberg.com/ux/
+
