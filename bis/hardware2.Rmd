@@ -1,0 +1,144 @@
+---
+title: "Processors, Memory and Motherboards"
+output: 
+  html_document:
+    css: styles.css
+---
+
+![](logo.jpg)
+
+#An Engineer's View of a Modern Computer
+
+Last week, we discussed a computer from a logical point of view based on the von Neumann Architecture. This week, we will examine the computer from an engineer's point of view by examining the physical arrangement and design of a computer's components.
+
+By the end of this week, students will have developed their ability to:
+
+* Describe how the components in the von Neumann Architecture are integrated physically into a modern computer.
+
+* Describe how the arrangement of these components affects the performance of a modern computer.
+
+#Processors
+
+_Processors_ or Central Processing Units (CPUs) interpret and carry out the basic instructions for operating a computer (Vermaat et al., 2015, p. 280).
+
+"A computer __chip__ is a small piece semiconductor material, usually silicon, on which integrated circuits are etched. An __integrated circuit__ contains many microscopic pathways capable of carrying electrical current (Vermaat et al., 2015, p. 278).
+
+"A __processor core__ contains the circuitry necessary to execute instructions" (Vermaat et al., 2015, p. 280).
+
+Given the robust development of processor technology, we can expect rapid changes in the capabilities and design of processors. One such development, the __multi-core processor__ is a single chip with multiple processor cores (Vermaat et al., 2015, p. 280). Such processor designs permit the computer to execute more than one instruction at a time.
+
+##Parts of Modern Processors
+
+The __Control Unit (CU)__ is the component of the processor that directs and coordinates most of the operations in the computer by interpreting each instruction issued by a program and initiating the necessary actions to execute that instruction (Vermaat et al., 2015, p. 281).
+
+The __Arithmetic Logic Unit (ALU)__ performs arithmetic and logical operations (Vermaat et al., 2015, p. 281).
+
+"A processor contains small, high-speed storage locations, called __registers__ , that temporarily hold data and instructions. Registers are part of the processor, not part of memory or a permanent storage device" (Vermaat et al., 2015, pp. 282).
+
+Modern computers have many different kinds of registers.
+
+__General registers__ temporarily store data items such as numbers used in calculations.
+
+__Special-purpose registers__ have specific functions in the processor. 
+
+__Instruction Register (IR)__ holds the instruction currently being executed.
+
+__Program Counter (PC)__ holds the main memory address of the next instruction to be executed.
+
+The __System Clock__ is a small quartz crystal circuit that controls the timing of operations in a processor (Vermaat et al., 2015, pp. 282-283). The system clock generates regular electronic pulses that set the pace of operations in the computer's components. Each tick of the clock is a single clock cycle. The __clock speed__ is the pace of the system measured in hertz (cycles per second). Modern processors are generally measured in gigahertz (GHz) equaling 1 billion clock ticks per second. __Faster clock speeds mean that all things being equal the computer can execute more instructions per second.__
+
+__L1 Cache__ is memory cache built directly on the processor chip to store frequently used instructions and data (Vermaat et al., 2015, p. 294).
+
+__L2 Cache__ is memory cache built directly on the processor chip which is slower than L1, but has higher storage capacity (Vermaat et al., 2015, p. 294).
+
+" __Word Size__ is the number of bits the processor can interpret and execute at a given time. That is, a 64-bit processor can manipulate 64 bits at a time" (Vermaat et al., 2015, p. 300).  
+
+#Memory
+
+" __Memory__ consists of electronic components that store instructions waiting to be executed by the processor, data needed by those instructions, and the results of processing the data in the computer" (Vermaat et al., 2015, p. 290). Memory stores three different kinds of items: system instructions, program instructions and data.
+
+"A __byte__ is the basic storage unit in memory" (Vermaat et al., 2015, p. 290).
+
+Memory is __addressable__ meaning that each location in memory has a unique number that identifies that location. When a piece of data is stored in memory, the computer accesses it by its memory address. Manufacturers report the number of bytes available for storage in the memory they sell. A gigabyte (GB) equals about 1 billion bytes. 
+
+##Volatile and Nonvolatile Memory
+
+Memory comes in two basic varieties: volatile and non-volatile.
+
+__Volatile memory__ like Random Access Memory (RAM) or main memory only stores information when the computer is running. As soon as a user powers the computer down, the information in volatile storage is lost.
+
+__Nonvolatile memory__ like Read Only Memory (ROM) stores information even when the computer is powered off. 
+
+In terms of the memory hierarchy, storage devices near the top of the memory hierarchy like registers and cache are generally volatile while storage devices near the bottom of the memory hierarchy like hard disks tend to be nonvolatile.
+
+##Types of Volatile Memory
+
+" __Random Access Memory (RAM)__ , also called main memory, consists of memory chips that can be read from and written to by the processor" (Vermaat et al., 2015, p. 290). RAM is an example of volatile memory. There are many different types of technologies for Memory Modules (Vermaat et al., 2015, pp. 292-293).
+
+__Cache__ is a temporary storage area used in modern computers to improve performance (Vermaat et al., 2015, pp. 293-294). This week we'll discuss memory cache, but in future classes we'll also discuss disk cache.
+
+__Memory cache__ helps improve the performance of computers by storing frequently used instructions and data. We've already seen that modern processors have memory cache modules (L1 and L2) built directly into their units. 
+
+__L3 Cache__ is memory cache on the motherboard.
+
+##Types of Nonvolatile Memory
+
+__Read-Only Memeory (ROM)__ refers to memory chips that store permanent data and instructions (Vermaat et al., 2015, p. 294). Manufacturers often use ROM chips to store permanent instructions like machine start up instructions. Firmware is the software instructions and data permanently stored in ROM chips.
+
+__Flash Memory__ is a type of Nonvolatile memory that can be erased and rewritten electronically (Vermaat et al., 2015, p. 295). Flash memory is used to store names and addresses in a smart phone for example.
+
+__Complementary Metal-Oxide Semiconductor (CMOS)__ technology is a popular option for nonvolatile storage because it offers high speeds and low power consumption (Vermaat et al., 2015, p. 296). Flash memory chips that store a computer's start up information often use CMOS.
+
+##Access Time
+
+" __Access Time__ is the amount of time it takes the processor to read data, instructions, and information from memory" (Vermaat et al., 2015, p. 296).
+
+Access time can be measured in nanoseconds (ns, 1 billionth of a second) or megahertz (MHz).
+To convert megahertz to nanoseconds divide 1 billion nanoseconds by the megahertz number. For example, an 800 MHz (800,000,000 hertz) access time for memory is 1.25 ns:
+
+1,000,000,000/800,000,000 = 1.25 ns
+
+#Motherboards and Buses
+
+Now, we have seen the processor and we have seen different kinds of memory, but how do these components communicate with each other?
+
+A __Motherboard__ , sometimes called a system board, is the main circuit board of the computer. The Processor, Memory and other computer components plug into and communicate   
+over the motherboard (Vermaat et al., 2015, p. 278).
+
+System components like the processor and memory communicate via specific channels called buses. A __bus__ allows devices to communicate with each other (Vermaat et al., 2015, pp. 299-300).
+
+Buses consist of data buses, address buses and sometimes control buses. 
+
+The __bus width__ determines the number of bits that the computer can transmit at one time (Vermaat et al., 2015, p. 300). In most computers, the bus width is equal to the word size of the computer.
+
+Different buses route data between different components in the computer.
+
+The system bus or __front-side bus (FSB)__ is a part of the motherboard connecting the processor to main memory.
+
+The __backside bus (BSB)__ connects the processor to cache.
+
+An __expansion bus__ allows the processor to communicate with peripheral devices.
+
+#Machine Cycle
+
+For each instruction carried out by the computer, the processor repeats a set of four operations referred to as a __machine cycle__ . (Vermaat et al., 2015, pp. 281-282)
+
+1. __Fetching__ involves retrieving a program instruction or data item from memory.
+
+2. __Decoding__ translates the fetched instruction or data into signals the computer can execute.
+
+3. __Executing__ carries out the requested command.
+
+4. __Storing__ writes the result of the executed command to memory.
+
+#Review of Processors, Memory, Motherboards and Buses
+
+![](cpu_mm_diagram.gif)
+
+Source: <http://fourier.eng.hmc.edu/e85_old/lectures/introduction/node6.html>
+
+#Resources
+
+http://fourier.eng.hmc.edu/e85_old/lectures/introduction/node6.html
+
+Vermaat, M., Sebok, S. L., Freund, S. M., Campbell, J. T., & Frydenberg, M. (2015). Discovering computers 2016: tools, apps, devices, and the impact of technology. Boston, MA: Cengage learning.
