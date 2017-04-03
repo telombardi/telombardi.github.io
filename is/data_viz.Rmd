@@ -1,0 +1,89 @@
+---
+title: "Data Description and Visualization"
+output: 
+  html_document:
+    css: styles.css
+---
+
+![](logo.jpg)
+
+#Data Description and Visualization in R
+
+##Single Numeric Variables
+
+```{r}
+d1 <- read.csv("data_desc_viz_1.csv")
+head(d1)
+```
+
+##Histograms
+
+
+```{r}
+hist(d1$Temperature, main="Temperature in Degrees F", xlab="Temperature (Degrees F)")
+```
+```{r}
+hist(d1$Temperature, breaks=20, main="Temperature in Degrees F", xlab="Temperature (Degrees F)")
+```
+
+##Density Plots
+
+```{r}
+mean(d1$Temperature)
+sd(d1$Temperature)
+plot(density(d1$Temperature))
+abline(v=mean(d1$Temperature),col="Green")
+abline(v=median(d1$Temperature),col="Blue")
+```
+
+##Box Plots
+
+```{r}
+max(d1$Temperature)
+quantile(d1$Temperature,3/4)
+median(d1$Temperature)
+quantile(d1$Temperature,1/4)
+min(d1$Temperature)
+boxplot(d1$Temperature)
+```
+
+#Single Categorical Variables
+
+```{r}
+d1 <- read.csv("data_desc_viz_2.csv")
+head(d1)
+```
+
+##Pie Chart
+
+```{r}
+mytable <- table(d1$Ice.Cream.Preference)
+lbls <- paste(names(mytable), "\n", mytable, sep="")
+pie(mytable, labels = lbls, 
+  	main="Pie Chart of Ice Cream Preferences")
+```
+
+##Bar Plots
+
+```{r}
+barplot(mytable,col=c("blue","red","green","yellow","gray"))
+```
+
+#Two Numeric Variables
+
+```{r}
+d1 <- read.csv("data_desc_viz_3.csv")
+d1 <- d1[1:12,]
+head(d1)
+```
+
+##Scatter Plot
+```{r}
+cor(d1$Temperature,d1$Ice.Cream.Sales,method="pearson")
+cor.test(d1$Temperature,d1$Ice.Cream.Sales,method="pearson")
+
+plot(d1$Temperature,d1$Ice.Cream.Sales, main="Ice Cream Sales vs. Temperature", xlab="Temperature (Celsius)",
+                                        ylab="Ice Cream Sales in US Dollars")
+abline(lm(d1$Ice.Cream.Sales ~ d1$Temperature))
+```
+
