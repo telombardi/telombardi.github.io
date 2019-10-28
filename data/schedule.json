@@ -1,27 +1,27 @@
 {"schedule": {
-    "Monday": { 
+    "Monday":  
 	[
 	    {"item":"IST 201, 5:30 - 6:45 PM"},
 		{"item":"IST 315, 7:00 - 8:15 PM"}
 	]
-    },
-	"Tuesday": {
+    ,
+	"Tuesday": 
 	[
 	    {"item":"Office Hours, 2:00 - 4:00 PM"},
 		{"item":"Library Hours, 6:00 - 8:00 PM"}
 	]
-	},
-	"Wedesday": {
+	,
+	"Wedesday": 
 	[
 	    {"item":"Office Hours, 1:00 - 4:00 PM"},
 		{"item":"IST 401, 5:30 - 6:45 PM"}
 	]
-	},
-	"Thursday": {
+	,
+	"Thursday": 
 	[
 	     {"item":"Office Hours, 2:00 - 4:00 PM"},
 		 {"item":"Library Hours, 6:00 - 8:00 PM"}
 	]
-	}
+	
   }
 }
