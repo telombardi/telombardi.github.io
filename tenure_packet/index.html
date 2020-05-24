@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Portfolio of T. E. Lombardi</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
+.w3-row-padding img {margin-bottom: 12px}
+.bgimg {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('images/bdip.png');
+  min-height: 100%;
+}
+</style>
+</head><body>
+
+<!-- Sidebar with image -->
+<nav class="w3-sidebar w3-hide-medium w3-hide-small" style="width:40%">
+  <div class="bgimg"></div>
+</nav>
+
+<!-- Hidden Sidebar (reveals when clicked on menu icon)-->
+<nav class="w3-sidebar w3-black w3-animate-right w3-xxlarge" style="display:none;padding-top:150px;right:0;z-index:2" id="mySidebar">
+  <a href="javascript:void(0)" onclick="closeNav()" class="w3-button w3-black w3-xxxlarge w3-display-topright" style="padding:0 12px;">
+    <i class="fa fa-remove"></i>
+  </a>
+  <div class="w3-bar-block w3-center">
+    <a href="#" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">Home</a>
+    <a href="#portfolio" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">Portfolio</a>
+    <a href="#about" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">About</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">Contact</a>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="w3-main w3-padding-large" style="margin-left:40%">
+
+  <!-- Menu icon to open sidebar -->
+  <span class="w3-button w3-top w3-white w3-xxlarge w3-text-grey w3-hover-text-black" style="width:auto;right:0;" onclick="openNav()"><i class="fa fa-bars"></i></span>
+
+  <!-- Header -->
+  <header class="w3-container w3-center" style="padding:128px 16px" id="home">
+    <h1 class="w3-jumbo"><b>Thomas E. Lombardi</b></h1>
+    <p>Assistant Professor of Computer Information Systems</p>
+    <img src="images/bdip.png" class="w3-image w3-hide-large w3-hide-small w3-round" style="display:block;width:60%;margin:auto;">
+    <img src="images/bdip.png" class="w3-image w3-hide-large w3-hide-medium w3-round" width="633" height="733">
+    <button class="w3-button w3-light-grey w3-padding-large w3-margin-top">
+      <i class="fa fa-download"></i> Download CV
+    </button>
+  </header>
+
+  <!-- Portfolio Section -->
+  <div class="w3-padding-32 w3-content" id="portfolio">
+    <h2 class="w3-text-grey">Portfolio Highlights</h2>
+    <hr class="w3-opacity">
+
+    <!-- Grid for photos -->
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-half">
+	    <a href="https://doi.org/10.1007/978-3-319-54226-3" target="_blank">
+            <img src="images/new_directions.jpg" style="width:100%;border:1px solid black;" alt="New Directions for Computing Education: Embedding Computing Across Disciplines" />
+		</a>
+		<a href="https://www.iacis.org/iis/2019/1_iis_2019_204-212.pdf" target="_blank">
+		    <img src="images/constructivism.png" style="width:100%;border:1px solid black;" alt="Pairing Constructivism with the Multidisciplinarity of IS Education" />
+		</a>
+		<a href="images/student_poster.ppt" target="_blank">
+            <img src="images/student_research.png" style="width:100%;border:1px solid black;" alt="Paradise Lost?" />
+		</a>
+		<a href="https://doi.org/10.11588/dah.2018.3.34297" target="_blank">
+            <img src="images/dahj.png" style="width:100%;border:1px solid black;" alt="A Role-Based Model for Successful Collaboration in Digital Art History" />
+		</a>
+		<a href="https://doi.org/10.1145/3017680.3022360" target="_blank">
+		    <img src="images/strategies.png" style="width:100%;border:1px solid black;" alt="Strategies for Including Soft Skills in Interdisciplinary Content in CS Education." />
+		</a>
+		<a href="https://www.iacis.org/iis/2017/3_iis_2017_40-52.pdf" target="_blank">
+		    <img src="images/island.png" style="width:100%;border:1px solid black;" alt="No Student is an Island" />
+		</a>
+		<a href="https://doi.org/10.1162/leon_a_00779" target="_blank">
+		    <img src="images/icon.png" style="width:100%;border:1px solid black;" alt="The Communion of Saints: Networks and Iconography" />
+		</a>
+      </div>
+
+      <div class="w3-half">
+        <a href="https://dl.acm.org/doi/10.1145/3349528" target="_blank">
+            <img src="images/aligning.png" style="width:100%;border:1px solid black;" alt="Aligning Pedagogy and Content in Interdisciplinary Computing Education" />
+		</a>
+		<a href="https://www.iacis.org/iis/2018/1_iis_2018_218-226.pdf" target="_blank">
+		    <img src="images/disasters.png" style="width:100%;border:1px solid black;" alt="Databases and Disasters: A Case Study in Small-n Educational Research" />
+		</a>
+		<a href="https://doi.org/10.1016/j.algal.2016.11.003" target="_blank">
+            <img src="images/chart.png" style="width:100%;border:1px solid black;" alt="Differential Transcript and Protein Profiles Under Nitrogen Starvation of Synechocystis 6803 Wild-type and Delta glgC, a Mutant Incapable of Glycogen Storage" />
+		</a>
+		<a href="https://doi.org/10.4018/978-1-5225-2101-3.ch007" target="_blank">
+            <img src="images/db_pbl.png" style="width:100%;border:1px solid black;" alt="Adapting Problem-Based Learning to Database Courses in the Digital Age" />
+		</a>
+		<a href="https://doi.org/10.1145/2839509.2844576" target="_blank">
+            <img src="images/engagement.png" style="width:100%;border:1px solid black;" alt="Improving engagement in introductory courses with homework resubmission" />
+		</a>
+		<a href="https://globaljournals.org/GJHSS_Volume14/3-Mining-the-Cloud-of-Witness.pdf" target="_blank">
+            <img src="images/cloud.png" style="width:100%;border:1px solid black;" alt="Mining the Cloud of Witness" />
+		</a>
+		<a href="https://www.worldcat.org/isbn/9783639027587" target="_blank">
+            <img src="images/style.png" style="width:100%;border:1px solid black;" alt="The Classification of Style in Painting" />
+		</a>
+      </div>
+    <!-- End photo grid -->
+    </div>
+  <!-- End Portfolio Section -->
+  </div>
+
+  <!-- About Section -->
+  <div class="w3-content w3-justify w3-text-grey w3-padding-32" id="about">
+    <h2>About</h2>
+    <hr class="w3-opacity">
+    <p>Some text about me.
+    </p>
+    <h3 class="w3-padding-16">My Skills</h3>
+    <p class="w3-wide">Photography</p>
+    <div class="w3-light-grey">
+      <div class="w3-container w3-center w3-padding-small w3-dark-grey" style="width:95%">95%</div>
+    </div>
+    <p class="w3-wide">Web Design</p>
+    <div class="w3-light-grey">
+      <div class="w3-container w3-center w3-padding-small w3-dark-grey" style="width:85%">85%</div>
+    </div>
+    <p class="w3-wide">Photoshop</p>
+    <div class="w3-light-grey">
+      <div class="w3-container w3-center w3-padding-small w3-dark-grey" style="width:80%">80%</div>
+    </div><br>
+
+    <div class="w3-row w3-center w3-dark-grey w3-padding-16 w3-section">
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">14+</span><br>
+        Partners
+      </div>
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">55+</span><br>
+        Projects Done
+      </div>
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">89+</span><br>
+        Happy Clients
+      </div>
+      <div class="w3-quarter w3-section">
+        <span class="w3-xlarge">150+</span><br>
+        Meetings
+      </div>
+    </div>
+
+    <button class="w3-button w3-light-grey w3-padding-large w3-section">
+      <i class="fa fa-download"></i> Download Resume
+    </button>
+
+    <!-- Scholarly Activities -->
+    <h3 class="w3-padding-24">Scholarly Activities</h3>
+    <img src="images/orcid.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">ORCID: </span>
+	<a href="https://orcid.org/0000-0001-9824-0659" target="_blank">0000-0001-9824-0659</a></p> 
+    <p>ORCID tracks scholarly activities chronologically.</p><br>
+   
+    <img src="images/google_scholar.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">Google Scholar:</span> <a href="https://scholar.google.com/citations?hl=en&user=tQiPuksAAAAJ" target="_blank" />https://scholar.google.com/citations?hl=en&user=tQiPuksAAAAJ</a></p>
+    <p>Google Scholar tracks the impact of scholarly activites.</p><br>
+    
+    <img src="images/linkedin.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">LinkedIn: </span> <a href="https://www.linkedin.com/in/telombardi/" target="_blank">https://www.linkedin.com/in/telombardi/</a></p>
+    <p>LinkedIn documents activities related to 
+	academic and consulting engagements.</p><br>
+	
+	<img src="images/github.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">GitHub: </span> <a href="https://github.com/telombardi" target="_blank">https://github.com/telombardi</a></p>
+    <p>GitHub organizes coding projects related to research and teaching.</p><br>
+	
+	<img src="images/researchgate.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">ResearchGate: </span> <a href="https://www.researchgate.net/profile/Thomas_Lombardi" target="_blank">https://www.researchgate.net/profile/Thomas_Lombardi</a></p>
+    <p>ResearchGate presents scholarly activties in their social context.</p><br>
+    
+	<img src="images/academia.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">Academia.edu: </span> <a href="https://uvi.academia.edu/telombardi" target="_blank">https://uvi.academia.edu/telombardi</a></p>
+    <p>Academia.edu presents scholarly activties in their social context.</p><br>
+	
+	<img src="images/youtube.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    <p><span class="w3-large w3-text-black w3-margin-right">YouTube: </span> <a href="https://www.youtube.com/user/telombardi" target="_blank">https://www.youtube.com/user/telombardi</a></p>
+    <p>YouTube organizes videos created to support student learning.</p><br>
+	
+    <!-- Grid for pricing tables -->
+    <h3 class="w3-padding-16">Service Activities</h3>
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-half w3-margin-bottom">
+        <ul class="w3-ul w3-center w3-card w3-hover-shadow">
+          <li class="w3-dark-grey w3-xlarge w3-padding-32">IST/DSC Chair</li>
+          <li class="w3-padding-16">Assessment Activities</li>
+          <li class="w3-padding-16">Department Meetings</li>
+          <li class="w3-padding-16">Curriculum Development</li>
+          <li class="w3-padding-16">Advising</li>
+        </ul>
+      </div>
+
+      <div class="w3-half">
+        <ul class="w3-ul w3-center w3-card w3-hover-shadow">
+          <li class="w3-black w3-xlarge w3-padding-32">Profession</li>
+          <li class="w3-padding-16">IACIS Member</li>
+          <li class="w3-padding-16">IACIS Editor</li>
+          <li class="w3-padding-16"></li>
+          <li class="w3-padding-16"></li>
+        </ul>
+      </div>
+    <!-- End Grid/Pricing tables -->
+    </div>
+    
+  <!-- End About Section -->
+  </div>
+
+  <!-- Contact Section -->
+  <div class="w3-padding-32 w3-content w3-text-grey" id="contact" style="margin-bottom:64px">
+    <h2>Contact Me</h2>
+    <hr class="w3-opacity">
+
+    <div class="w3-section">
+      <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right"> </i> UVI Email: thomas.lombardi@uvi.edu</p>
+	  <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right"> </i> Email: telombardi@gmail.com</p>
+    </div>
+  <!-- End Contact Section -->
+  </div>  
+  
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-64 w3-light-grey w3-center w3-opacity w3-xlarge" style="margin:-24px">
+    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+  <!-- End footer -->
+  </footer>
+  
+<!-- END PAGE CONTENT -->
+</div>
+
+<script>
+// Open and close sidebar
+function openNav() {
+  document.getElementById("mySidebar").style.width = "60%";
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function closeNav() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+</script>
+
+
+</body></html>
